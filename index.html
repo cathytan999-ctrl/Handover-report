@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property Handover — Stonebridge Family Trust</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#1a1a1a;color:#f0ede6;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+/* HEADER */
+.hdr{background:#1c3a2f;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #b5892a;position:sticky;top:0;z-index:50;}
+.hdr-t{font-size:17px;font-weight:700;color:#f0ede6;}
+.hdr-s{font-size:10px;color:#9bb8ae;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;}
+.hdr-r{display:flex;gap:8px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 16px;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.btn-g{background:#1c3a2f;color:#f0ede6;}.btn-g:active{background:#254d3e;}
+.btn-o{background:#b5892a;color:#fff;}.btn-o:active{background:#9a7422;}
+.btn-w{background:#25d366;color:#fff;}.btn-w:active{background:#1da851;}
+.btn-r{background:#333;color:#f0ede6;border:1px solid #444;}.btn-r:active{background:#444;}
+.btn-sm{padding:6px 12px;font-size:12px;}
+.btn-full{width:100%;}
+
+/* PAGES */
+.page{max-width:680px;margin:0 auto;padding:24px 16px 80px;}
+
+/* CARD */
+.card{background:#242424;border:1px solid #333;border-radius:8px;padding:20px;margin-bottom:16px;}
+.card-title{font-size:17px;font-weight:700;color:#f0ede6;margin-bottom:4px;}
+.card-sub{font-size:13px;color:#888;margin-bottom:18px;line-height:1.5;}
+
+/* FORM */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fc{grid-column:1/-1;}
+.fl{display:block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:4px;}
+.fi{width:100%;padding:10px 12px;background:#1a1a1a;border:1px solid #444;border-radius:5px;color:#f0ede6;font-size:13px;font-family:inherit;}
+.fi:focus{outline:none;border-color:#b5892a;}
+.ft{min-height:60px;resize:vertical;}
+.sec{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#666;padding-bottom:8px;border-bottom:1px solid #333;margin-bottom:14px;margin-top:20px;}
+.sec:first-child{margin-top:0;}
+
+/* STEPS BAR */
+.steps{background:#1e1e1e;border-bottom:1px solid #333;display:flex;overflow-x:auto;padding:0 16px;}
+.stp{display:flex;align-items:center;gap:6px;padding:11px 12px;font-size:12px;font-weight:600;color:#555;white-space:nowrap;border-bottom:2px solid transparent;}
+.stp.act{color:#b5892a;border-bottom-color:#b5892a;}
+.stp.done{color:#2d6a4f;}
+.sn{width:20px;height:20px;border-radius:50%;background:#333;color:#666;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.stp.act .sn{background:#b5892a;color:#fff;}
+.stp.done .sn{background:#2d6a4f;color:#fff;}
+.sarr{color:#444;padding:0 2px;display:flex;align-items:center;}
+
+/* STEP ACTIONS */
+.sa{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:18px;border-top:1px solid #333;}
+
+/* HOME */
+.hero{text-align:center;padding:32px 0 24px;}
+.hero-ico{font-size:52px;margin-bottom:12px;}
+.hero h1{font-size:26px;font-weight:700;color:#b5892a;}
+.hero p{font-size:13px;color:#888;margin-top:6px;}
+.hacts{display:flex;gap:10px;justify-content:center;margin:20px 0 28px;flex-wrap:wrap;}
+.sec-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#666;margin-bottom:10px;}
+
+/* INSPECTION CARDS */
+.icard{background:#242424;border:1px solid #333;border-radius:8px;padding:16px;margin-bottom:10px;}
+.icard-top{display:flex;align-items:center;gap:12px;}
+.icard-ico{font-size:26px;}
+.icard-info{flex:1;}
+.icard-title{font-size:14px;font-weight:700;color:#f0ede6;}
+.icard-meta{font-size:11px;color:#666;margin-top:2px;}
+.icard-btns{display:flex;gap:8px;margin-top:12px;}
+.badge-done{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:#1c3a2f;color:#2d6a4f;margin-top:4px;}
+.badge-prog{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:#3a2e1a;color:#b5892a;margin-top:4px;}
+.empt{text-align:center;padding:40px 20px;color:#555;}
+.empt-ico{font-size:40px;margin-bottom:10px;}
+
+/* ROOM PICKER */
+.rpick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.rpc{background:#1a1a1a;border:1px solid #333;border-radius:5px;padding:10px 12px;display:flex;align-items:center;gap:8px;}
+.rpc-lbl{flex:1;font-size:12px;font-weight:600;}
+.rqty{display:flex;align-items:center;gap:5px;}
+.rqb{width:26px;height:26px;border:1px solid #444;background:#242424;border-radius:4px;cursor:pointer;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;color:#f0ede6;}
+.rqb:active{background:#1c3a2f;border-color:#2d6a4f;}
+.rqv{font-size:14px;font-weight:700;min-width:22px;text-align:center;color:#b5892a;}
+
+/* ROOM BUILDER */
+.rb{border:1px solid #333;border-radius:6px;overflow:hidden;margin-bottom:10px;}
+.rbh{background:#1c3a2f;padding:10px 14px;display:flex;align-items:center;gap:8px;}
+.rbhi{background:transparent;border:none;color:#f0ede6;font-size:14px;font-weight:700;flex:1;font-family:inherit;}
+.rbhi:focus{outline:none;}
+.irow{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid #2a2a2a;background:#1e1e1e;}
+.irow:last-child{border-bottom:none;}
+.irow.xd{opacity:.35;}
+.irow.xd .inp{text-decoration:line-through;}
+.inp{flex:1;border:none;background:transparent;color:#f0ede6;font-size:13px;font-family:inherit;}
+.inp:focus{outline:none;}
+.xbtn{padding:3px 8px;border:1px solid #444;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;background:transparent;color:#666;font-family:inherit;}
+.xbtn.on,.xbtn:active{border-color:#8b2635;color:#8b2635;background:#2a1518;}
+.dbtn{background:none;border:none;cursor:pointer;color:#444;font-size:14px;padding:2px 4px;}
+.dbtn:active{color:#8b2635;}
+.addi{display:flex;align-items:center;gap:8px;padding:9px 12px;background:#1a1a1a;border-top:1px dashed #333;}
+.addi-inp{flex:1;border:none;background:transparent;color:#f0ede6;font-size:13px;font-family:inherit;}
+.addi-inp:focus{outline:none;}
+.addi-inp::placeholder{color:#555;}
+.addi-btn{background:none;border:none;cursor:pointer;color:#666;font-size:16px;}
+.addi-btn:active{color:#b5892a;}
+
+/* ASSESS */
+.sbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.spl{background:#242424;border:1px solid #333;border-radius:6px;padding:10px 12px;flex:1;min-width:55px;text-align:center;}
+.spl .n{font-size:22px;font-weight:700;color:#b5892a;}
+.spl .l{font-size:10px;color:#666;text-transform:uppercase;letter-spacing:.05em;}
+.pb{height:4px;background:#333;border-radius:2px;margin-bottom:16px;}
+.pbf{height:100%;background:#2d6a4f;border-radius:2px;transition:width .3s;}
+.pbl{font-size:11px;color:#666;margin-top:4px;}
+.rnav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.rnb{padding:5px 11px;border:1px solid #333;border-radius:20px;font-size:12px;cursor:pointer;background:#1e1e1e;color:#888;font-family:inherit;}
+.rnb.done{background:#1c3a2f;border-color:#2d6a4f;color:#2d6a4f;}
+.rnb.part{background:#2a2010;border-color:#b5892a;color:#b5892a;}
+
+/* ASSESS ROOM */
+.arm{background:#242424;border:1px solid #333;border-radius:8px;margin-bottom:12px;}
+.armh{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333;cursor:pointer;}
+.armh h3{font-size:14px;font-weight:700;}
+.armh .rp{font-size:11px;color:#666;}
+.ait{display:flex;align-items:flex-start;gap:10px;padding:11px 16px;border-bottom:1px solid #2a2a2a;flex-wrap:wrap;}
+.ait:last-child{border-bottom:none;}
+.ain{font-size:13px;font-weight:600;flex:1;min-width:100px;padding-top:4px;}
+.cbts{display:flex;gap:4px;flex-shrink:0;}
+.cbt{padding:5px 10px;border:1px solid #333;background:transparent;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;color:#666;font-family:inherit;}
+.cbt.good.sel{background:#1c3a2f;color:#2d6a4f;border-color:#2d6a4f;}
+.cbt.fair.sel{background:#2a2010;color:#b5892a;border-color:#b5892a;}
+.cbt.poor.sel{background:#2a1518;color:#8b2635;border-color:#8b2635;}
+.air{display:flex;flex-direction:column;align-items:flex-end;gap:6px;width:100%;}
+.ni{font-size:12px;border:1px solid #333;border-radius:4px;padding:5px 8px;background:#1a1a1a;color:#f0ede6;width:100%;font-family:inherit;}
+.ni:focus{outline:none;border-color:#b5892a;}
+.ph-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.pht{width:34px;height:34px;object-fit:cover;border-radius:4px;border:1px solid #333;cursor:pointer;}
+.pha{width:34px;height:34px;border:1.5px dashed #444;border-radius:4px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:#555;}
+.pha:active{border-color:#b5892a;color:#b5892a;}
+
+/* KEYS */
+.kcard{background:#1a1a1a;border:1px solid #333;border-radius:6px;padding:12px;margin-bottom:10px;}
+.ktop{display:flex;align-items:center;gap:10px;}
+.kico{font-size:20px;}
+.kinf{flex:1;}
+.kinf label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#666;display:block;margin-bottom:2px;}
+.kinf input{border:none;background:transparent;color:#f0ede6;font-size:13px;width:100%;font-family:inherit;}
+.kinf input:focus{outline:none;border-bottom:1px solid #b5892a;}
+.qc{display:flex;align-items:center;gap:4px;}
+.qb{width:24px;height:24px;border:1px solid #444;background:#242424;border-radius:4px;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;color:#f0ede6;}
+.qb:active{background:#1c3a2f;}
+.qv{font-size:14px;font-weight:700;min-width:20px;text-align:center;color:#b5892a;}
+.kph{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px dashed #333;}
+.kpht{width:54px;height:42px;object-fit:cover;border-radius:4px;border:1px solid #333;cursor:pointer;}
+.kpha{width:54px;height:42px;border:1.5px dashed #444;border-radius:4px;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:17px;color:#555;gap:2px;}
+.kpha span{font-size:9px;text-transform:uppercase;letter-spacing:.05em;}
+.kpha:active{border-color:#b5892a;color:#b5892a;}
+
+/* DIV */
+.dv{display:flex;align-items:center;gap:8px;margin:16px 0 10px;}
+.dv span{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#666;white-space:nowrap;}
+.dl{flex:1;height:1px;background:#333;}
+
+/* SIG */
+.sgg{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.sgb{border:1px solid #333;border-radius:6px;padding:12px;background:#1e1e1e;}
+.sgb label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#666;display:block;margin-bottom:7px;}
+.sgpad{width:100%;height:68px;background:#1a1a1a;border:1px dashed #444;border-radius:5px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-top:7px;cursor:crosshair;}
+.sgpad canvas{position:absolute;top:0;left:0;}
+.sghint{font-size:12px;color:#555;pointer-events:none;position:relative;z-index:2;}
+
+/* PDF MODAL */
+.pdfm{display:none;position:fixed;inset:0;background:#111;z-index:200;flex-direction:column;}
+.pdfm.open{display:flex;}
+.pdft{background:#1c3a2f;padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #b5892a;flex-shrink:0;}
+.pdft-title{color:#f0ede6;font-size:14px;font-weight:700;flex:1;}
+.pdfinfo{background:#162e22;padding:10px 14px;border-bottom:1px solid #b5892a;flex-shrink:0;}
+.pdfinfo p{color:#9bb8ae;font-size:12px;line-height:1.6;}
+.pdff{flex:1;overflow-y:auto;background:#e8e8e8;padding:16px;}
+.pdfp{background:white;max-width:740px;margin:0 auto;padding:28px;color:#1a1a18;}
+
+/* SHARE SHEET */
+.ss-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;}
+.ss-ov.open{display:block;}
+.ss{display:none;position:fixed;bottom:0;left:0;right:0;background:#242424;border-radius:16px 16px 0 0;padding:20px;z-index:301;border-top:1px solid #333;}
+.ss.open{display:block;}
+.ss-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#666;text-align:center;margin-bottom:14px;}
+.ss-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.ss-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border:1px solid #333;border-radius:8px;background:#1e1e1e;cursor:pointer;font-size:12px;color:#f0ede6;font-family:inherit;font-weight:600;}
+.ss-btn:active{background:#1c3a2f;border-color:#2d6a4f;}
+.ss-ico{font-size:26px;}
+.ss-note{font-size:11px;color:#666;text-align:center;margin-bottom:14px;line-height:1.5;}
+
+/* LIGHTBOX */
+.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:400;align-items:center;justify-content:center;}
+.lb.open{display:flex;}
+.lb img{max-width:94vw;max-height:90vh;border-radius:4px;}
+.lbc{position:absolute;top:16px;right:16px;color:#fff;font-size:24px;cursor:pointer;background:rgba(255,255,255,.1);border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.lbn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.1);border:none;color:#fff;font-size:22px;padding:12px;cursor:pointer;border-radius:6px;}
+.lbprev{left:12px;}.lbnext{right:12px;}
+.lbcap{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-size:11px;white-space:nowrap;}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1c3a2f;color:#f0ede6;padding:11px 20px;border-radius:8px;font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.4);opacity:0;transition:all .25s;z-index:500;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* REPORT STYLES (inside pdfp) */
+.pdfp .rl{font-size:22px;font-weight:700;color:#1c3a2f;}
+.pdfp .rm{display:grid;grid-template-columns:1fr 1fr;gap:5px 16px;margin:12px 0;font-size:12px;}
+.pdfp .ml{color:#666;font-size:10px;text-transform:uppercase;letter-spacing:.06em;}
+.pdfp .mv{font-weight:600;color:#1a1a18;}
+.pdfp .dv{display:flex;align-items:center;gap:8px;margin:14px 0 8px;}
+.pdfp .dl{flex:1;height:1px;background:#ddd;}
+.pdfp .dv span{font-size:10px;font-weight:700;text-transform:uppercase;color:#888;white-space:nowrap;}
+.pdfp table{width:100%;border-collapse:collapse;margin-bottom:8px;}
+.pdfp th{text-align:left;padding:7px 10px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:#1c3a2f;color:#fff;}
+.pdfp td{padding:7px 10px;border-bottom:1px solid #eee;font-size:12px;vertical-align:top;color:#1a1a18;}
+.pdfp tr:nth-child(even) td{background:#f8f8f8;}
+.pdfp .bg{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;background:#eaf4ee;color:#2d6a4f;}
+.pdfp .bf{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;background:#fbf3e3;color:#b5892a;}
+.pdfp .bp{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;background:#f8eaec;color:#8b2635;}
+.pdfp .bn{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;background:#eee;color:#888;}
+.pdfp .rphs{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}
+.pdfp .rph{width:60px;height:44px;object-fit:cover;border-radius:3px;}
+.pdfp .stiles{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap;}
+.pdfp .stile{border-radius:5px;padding:9px 12px;text-align:center;flex:1;min-width:50px;}
+.pdfp .stile .n{font-size:20px;font-weight:700;}
+.pdfp .stile .l{font-size:9px;text-transform:uppercase;letter-spacing:.05em;}
+
+@media print{
+body>*:not(#printArea){display:none!important;}
+#printArea{display:block!important;}
+#printArea *{color:#1a1a18!important;}
+}
+@media(max-width:480px){
+.fg,.sgg,.pdfp .rm{grid-template-columns:1fr;}
+.sbar{flex-wrap:wrap;}
+.rpick{grid-template-columns:1fr 1fr;}
+}
+</style>
+
+</head>
+<body>
+
+<div id="printArea" style="display:none;padding:20px;font-family:Arial,sans-serif;max-width:740px;margin:0 auto;"></div>
+
+<!-- HEADER -->
+
+<div class="hdr">
+  <div>
+    <div class="hdr-t">Property Handover</div>
+    <div class="hdr-s">Stonebridge Family Trust</div>
+  </div>
+  <div class="hdr-r">
+    <button class="btn btn-r btn-sm" id="btnHome" onclick="goHome()" style="display:none">&#8962; Home</button>
+    <button class="btn btn-r btn-sm" id="btnSave" onclick="doSave()" style="display:none">&#128190; Save</button>
+  </div>
+</div>
+
+<!-- HOME -->
+
+<div id="vHome">
+  <div class="page">
+    <div class="hero">
+      <div class="hero-ico">&#127963;</div>
+      <h1>Property Handover</h1>
+      <p>Create and manage handover inspections</p>
+    </div>
+    <div class="hacts">
+      <button class="btn btn-g" onclick="newInsp()">+ New Inspection</button>
+      <label class="btn btn-r" style="cursor:pointer;">&#128193; Load File<input type="file" accept=".json" style="display:none" onchange="loadFile(event)"></label>
+    </div>
+    <div class="sec-lbl">Saved Inspections</div>
+    <div id="ilist"></div>
+  </div>
+</div>
+
+<!-- APP -->
+
+<div id="vApp" style="display:none;">
+
+<div class="steps">
+  <div class="stp act" id="st1"><div class="sn">1</div>Setup</div>
+  <div class="sarr">›</div>
+  <div class="stp" id="st2"><div class="sn">2</div>Rooms</div>
+  <div class="sarr">›</div>
+  <div class="stp" id="st3"><div class="sn">3</div>Assess</div>
+  <div class="sarr">›</div>
+  <div class="stp" id="st4"><div class="sn">4</div>Keys</div>
+  <div class="sarr">›</div>
+  <div class="stp" id="st5"><div class="sn">5</div>Report</div>
+</div>
+
+<!-- S1 -->
+
+<div class="page" id="v1">
+  <div class="card">
+    <div class="card-title">Property Details</div>
+    <div class="card-sub">These appear on the final report.</div>
+    <div class="sec">Property</div>
+    <div class="fg">
+      <div class="fc"><label class="fl">Address</label><input class="fi" id="fAddr" placeholder="e.g. 19-23 Budd Street, Collingwood VIC 3066"></div>
+      <div><label class="fl">Type</label><select class="fi" id="fType"><option value="commercial">Commercial Lease</option><option value="residential">Residential Rental</option></select></div>
+      <div><label class="fl">Handover</label><select class="fi" id="fHtype"><option value="in">Lease Commencement / Move-In</option><option value="out">Lease End / Move-Out</option><option value="periodic">Periodic Inspection</option></select></div>
+      <div><label class="fl">Date</label><input class="fi" id="fDate" type="date"></div>
+      <div><label class="fl">Lease Term</label><input class="fi" id="fLease" placeholder="e.g. 364 days"></div>
+    </div>
+    <div class="sec">Parties</div>
+    <div class="fg">
+      <div><label class="fl">Landlord / Owner</label><input class="fi" id="fLandlord" placeholder="e.g. Stonebridge Family Trust"></div>
+      <div><label class="fl">Tenant / Lessee</label><input class="fi" id="fTenant" placeholder="Tenant name"></div>
+      <div><label class="fl">Property Manager</label><input class="fi" id="fMgr" placeholder="e.g. Commercial Bureau RE"></div>
+      <div><label class="fl">Manager Contact</label><input class="fi" id="fMgrC" placeholder="Phone or email"></div>
+    </div>
+    <div class="sec">Notes</div>
+    <textarea class="fi ft" id="fNotes" placeholder="Overall condition notes..."></textarea>
+    <div class="sa"><span></span><button class="btn btn-g" onclick="goStep(2)">Next: Rooms ›</button></div>
+  </div>
+</div>
+
+<!-- S2 -->
+
+<div class="page" id="v2" style="display:none;">
+  <div class="card">
+    <div class="card-title">Configure Rooms</div>
+    <div class="card-sub">Set how many of each room. Cross off items that don't apply.</div>
+    <div class="sec">How many of each?</div>
+    <div class="rpick" id="rpick"></div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;padding-top:12px;border-top:1px dashed #333;margin-bottom:14px;">
+      <span style="font-size:12px;color:#666;align-self:center;">Add area:</span>
+      <button class="btn btn-r btn-sm" onclick="addQ('Study','&#128188;')">Study</button>
+      <button class="btn btn-r btn-sm" onclick="addQ('Storage','&#128230;')">Storage</button>
+      <button class="btn btn-r btn-sm" onclick="addQ('Car Space','&#128663;')">Car Space</button>
+      <button class="btn btn-r btn-sm" onclick="addQ('Balcony','&#127807;')">Balcony</button>
+      <button class="btn btn-r btn-sm" onclick="addCust()">+ Custom</button>
+    </div>
+    <div class="sec">Room Details &amp; Items</div>
+    <div id="rCfg"></div>
+    <div class="sa">
+      <button class="btn btn-r" onclick="goStep(1)">‹ Back</button>
+      <button class="btn btn-g" onclick="goStep(3)">Next: Assess ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- S3 -->
+
+<div class="page" id="v3" style="display:none;">
+  <div class="sbar">
+    <div class="spl"><div class="n" id="sR">0</div><div class="l">Rooms</div></div>
+    <div class="spl"><div class="n" id="sI">0</div><div class="l">Items</div></div>
+    <div class="spl"><div class="n" id="sG">0</div><div class="l">Good</div></div>
+    <div class="spl"><div class="n" id="sIs">0</div><div class="l">Issues</div></div>
+    <div class="spl"><div class="n" id="sP">0</div><div class="l">Photos</div></div>
+  </div>
+  <div class="pb"><div class="pbf" id="pbf" style="width:0%"></div></div>
+  <div class="pbl" id="pbl">0% assessed</div>
+  <div class="rnav" id="rnav"></div>
+  <div id="aArea"></div>
+  <div class="sa">
+    <button class="btn btn-r" onclick="goStep(2)">‹ Back</button>
+    <button class="btn btn-g" onclick="goStep(4)">Next: Keys ›</button>
+  </div>
+</div>
+
+<!-- S4 -->
+
+<div class="page" id="v4" style="display:none;">
+  <div class="card">
+    <div class="card-title">&#128273; Keys &amp; Access</div>
+    <div class="card-sub">Record all keys and access devices. Add photos for reference.</div>
+    <div id="kArea"></div>
+    <button class="btn btn-r btn-sm" style="margin-bottom:20px;" onclick="addKey()">+ Add Device</button>
+    <div class="dv"><div class="dl"></div><span>Meter Readings</span><div class="dl"></div></div>
+    <div class="fg" style="margin-top:12px;">
+      <div><label class="fl">Electricity (kWh)</label><input class="fi" id="fElec" placeholder="e.g. 12845"></div>
+      <div><label class="fl">Electricity NMI</label><input class="fi" id="fNMI" placeholder="e.g. 6102345678"></div>
+      <div><label class="fl">Gas (MJ)</label><input class="fi" id="fGas" placeholder="e.g. 3421"></div>
+      <div><label class="fl">Gas MIRN</label><input class="fi" id="fMIRN" placeholder="e.g. 5230012345"></div>
+      <div><label class="fl">Water (kL)</label><input class="fi" id="fWater" placeholder="e.g. 567.3"></div>
+      <div><label class="fl">Reading Date</label><input class="fi" id="fMDate" type="date"></div>
+    </div>
+    <div class="sa">
+      <button class="btn btn-r" onclick="goStep(3)">‹ Back</button>
+      <button class="btn btn-g" onclick="goStep(5)">Next: Report ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- S5 -->
+
+<div class="page" id="v5" style="display:none;">
+  <div class="card">
+    <div class="card-title">&#9997;&#65039; Sign-Off</div>
+    <div class="card-sub">Both parties sign to confirm the inventory is accurate.</div>
+    <div class="sgg">
+      <div class="sgb">
+        <label>Landlord / Owner</label>
+        <input class="fi" id="fSLL" placeholder="Full name" style="margin-bottom:8px;">
+        <input class="fi" id="fSLD" type="date">
+        <div class="sgpad"><canvas id="cvL" width="280" height="68"></canvas><span class="sghint" id="hL">Sign here</span></div>
+        <button class="btn btn-r btn-sm" style="margin-top:6px;" onclick="clrSig('L')">Clear</button>
+      </div>
+      <div class="sgb">
+        <label>Tenant / Lessee</label>
+        <input class="fi" id="fSTL" placeholder="Full name" style="margin-bottom:8px;">
+        <input class="fi" id="fSTD" type="date">
+        <div class="sgpad"><canvas id="cvT" width="280" height="68"></canvas><span class="sghint" id="hT">Sign here</span></div>
+        <button class="btn btn-r btn-sm" style="margin-top:6px;" onclick="clrSig('T')">Clear</button>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#2a2010;border:1px solid #b5892a;border-radius:6px;font-size:12px;color:#b5892a;">
+      &#9888;&#65039; By signing, both parties confirm this inventory accurately represents the property condition at handover.
+    </div>
+    <div class="sa">
+      <button class="btn btn-r" onclick="goStep(4)">‹ Back</button>
+      <button class="btn btn-o" onclick="genRpt()">&#128196; Generate Report</button>
+    </div>
+  </div>
+
+  <div id="rptSec" style="display:none;margin-top:16px;">
+    <div style="background:#1c3a2f;border-radius:8px;padding:16px;margin-bottom:14px;">
+      <div style="font-size:14px;font-weight:700;color:#f0ede6;margin-bottom:10px;">&#128196; Your report is ready</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button class="btn btn-o btn-full" onclick="viewPDF()">&#128065; View PDF</button>
+        <button class="btn btn-w btn-full" onclick="openSS()">&#128172; Share to WhatsApp / Email</button>
+        <button class="btn btn-r btn-full" onclick="doExport()">&#8595; Backup JSON</button>
+      </div>
+    </div>
+    <div id="rptOut" style="display:none;"></div>
+  </div>
+</div>
+
+</div><!-- /vApp -->
+
+<!-- PDF MODAL -->
+
+<div class="pdfm" id="pdfm">
+  <div class="pdft">
+    <div class="pdft-title">&#128196; Handover Report</div>
+    <button class="btn btn-o btn-sm" onclick="doPrint()">&#128438; Print</button>
+    <button class="btn btn-r btn-sm" onclick="openSS()">&#8679; Share</button>
+    <button class="btn btn-r btn-sm" onclick="clsPDF()">&#10005;</button>
+  </div>
+  <div class="pdfinfo">
+    <p>&#128438; <strong>To save as PDF:</strong> Tap Print › Safari print dialog opens › tap Share &#8679; (top right of print preview) › Save to Files or WhatsApp.</p>
+  </div>
+  <div class="pdff">
+    <div class="pdfp" id="pdfp"></div>
+  </div>
+</div>
+
+<!-- SHARE SHEET -->
+
+<div class="ss-ov" id="ssOv" onclick="closeSS()"></div>
+<div class="ss" id="ss">
+  <div class="ss-title">Share Report</div>
+  <div class="ss-grid">
+    <button class="ss-btn" onclick="shareNative()"><span class="ss-ico">&#128241;</span>iOS Share</button>
+    <button class="ss-btn" onclick="sharePrint()"><span class="ss-ico">&#128438;</span>Print / PDF</button>
+    <button class="ss-btn" onclick="shareEmail()"><span class="ss-ico">&#128140;</span>Email</button>
+    <button class="ss-btn" onclick="doExport();closeSS()"><span class="ss-ico">&#128190;</span>Save JSON</button>
+  </div>
+  <div class="ss-note">
+    <strong>iOS Share</strong> — sends file directly to WhatsApp, AirDrop, Mail &amp; more.<br>
+    <strong>Print / PDF</strong> — tap Share &#8679; in the print preview to send to WhatsApp.
+  </div>
+  <button class="btn btn-r btn-full" onclick="closeSS()">Cancel</button>
+</div>
+
+<!-- LIGHTBOX -->
+
+<div class="lb" id="lb">
+  <button class="lbc" onclick="clsLB()">&#10005;</button>
+  <button class="lbn lbprev" onclick="navLB(-1)">&#8249;</button>
+  <img id="lbImg" src="" alt="">
+  <button class="lbn lbnext" onclick="navLB(1)">&#8250;</button>
+  <div class="lbcap" id="lbCap"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var STORE = 'phi_v5';
+var S = {rooms:[],keys:[],nR:1,nK:1};
+var pQty = {};
+var cId = null;
+var lbS = null;
+
+var FLDS = ['fAddr','fType','fHtype','fDate','fLease','fLandlord','fTenant','fMgr','fMgrC','fNotes','fElec','fNMI','fGas','fMIRN','fWater','fMDate','fSLL','fSLD','fSTL','fSTD'];
+
+var RT = {
+  commercial:[
+    {k:'lobby',l:'Entry / Lobby',i:'&#128682;',d:1,it:['Main entry door','Security / intercom','Flooring','Ceiling','Lighting','Signage','Power points']},
+    {k:'floor',l:'Open Plan Floor',i:'&#127970;',d:1,it:['Flooring','Walls','Ceiling tiles','Lighting','Power & data','HVAC / aircon','Window blinds']},
+    {k:'meeting',l:'Meeting Room',i:'&#128187;',d:1,it:['Flooring','Walls & ceiling','Lighting','AV / projector','Blinds','Power & data','Whiteboard']},
+    {k:'kitchen',l:'Kitchen / Breakroom',i:'&#9749;',d:1,it:['Benchtop','Sink & tap','Microwave','Fridge','Dishwasher','Cabinets','Splashback']},
+    {k:'wc',l:'Bathroom / WC',i:'&#128697;',d:1,it:['Toilet cubicles','Basins & taps','Mirrors','Exhaust fan','Floor tiles','Wall tiles']},
+    {k:'storage',l:'Storeroom',i:'&#128230;',d:0,it:['Flooring','Shelving','Door & lock','Lighting']},
+    {k:'car',l:'Car Space',i:'&#128663;',d:0,it:['Line markings','Surface condition','Lighting','Access gate']},
+    {k:'common',l:'Common Area',i:'&#127959;',d:0,it:['Corridor flooring','Corridor lighting','Fire extinguisher','Emergency exits']}
+  ],
+  residential:[
+    {k:'entry',l:'Entry / Hallway',i:'&#128682;',d:1,it:['Front door & lock','Flooring','Walls & ceiling','Lights','Intercom']},
+    {k:'living',l:'Living Room',i:'&#128715;',d:1,it:['Flooring','Walls & ceiling','Lights','Windows & blinds','Power points','Air con']},
+    {k:'bedroom',l:'Bedroom',i:'&#128716;',d:1,it:['Flooring','Walls & ceiling','Built-in wardrobe','Lights','Windows & blinds']},
+    {k:'bathroom',l:'Bathroom',i:'&#128719;',d:1,it:['Shower / bath','Shower screen','Toilet','Vanity & basin','Mirror','Exhaust fan','Tiles']},
+    {k:'kitchen',l:'Kitchen',i:'&#127859;',d:1,it:['Benchtop','Cabinets','Sink & tap','Oven / cooktop','Rangehood','Dishwasher','Splashback']},
+    {k:'laundry',l:'Laundry',i:'&#129527;',d:1,it:['Tub / basin','Tap & drain','Walls & floor','Dryer vent']},
+    {k:'garage',l:'Garage',i:'&#128663;',d:0,it:['Roller door','Remote controls','Floor','Lighting']},
+    {k:'outdoor',l:'Outdoor / Garden',i:'&#127807;',d:0,it:['Lawn','Garden beds','Fencing','Paths','Outdoor tap','Letterbox']}
+  ]
+};
+var DKEYS=[{l:'Front Door Key',i:'&#128273;',q:2},{l:'Mailbox Key',i:'&#128236;',q:1},{l:'Car Park Remote',i:'&#128225;',q:1},{l:'Security Fob',i:'&#128179;',q:1}];
+
+// INIT
+window.onload = function(){renderHome();};
+
+function fv(id){var e=document.getElementById(id);return e?e.value:'';}
+function el(id){return document.getElementById(id);}
+function se(id,v){var e=el(id);if(e)e.textContent=v;}
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}
+function uid(){return 'i'+Math.random().toString(36).substr(2,9);}
+function today(){return new Date().toISOString().split('T')[0];}
+function toast(m){var t=el('toast');t.innerHTML=m;t.className='toast show';setTimeout(function(){t.className='toast';},3000);}
+
+// STORAGE
+function loadAll(){try{return JSON.parse(localStorage.getItem(STORE)||'[]');}catch(e){return[];}}
+function saveAll(l){localStorage.setItem(STORE,JSON.stringify(l));}
+
+function saveRec(done){
+  var f={};
+  for(var i=0;i<FLDS.length;i++){var e=el(FLDS[i]);if(e)f[FLDS[i]]=e.value;}
+  try{var cL=el('cvL');if(cL)f._sL=cL.toDataURL();}catch(e){}
+  try{var cT=el('cvT');if(cT)f._sT=cT.toDataURL();}catch(e){}
+  var list=loadAll(),idx=-1;
+  for(var i=0;i<list.length;i++){if(list[i].id===cId){idx=i;break;}}
+  var rec={id:cId,addr:f.fAddr||'Untitled',ptype:f.fType||'commercial',htype:f.fHtype||'in',ts:Date.now(),done:done||false,S:S,fields:f};
+  if(idx>=0){rec.done=done!==undefined?done:list[idx].done;list[idx]=rec;}else{list.unshift(rec);}
+  try{saveAll(list);return true;}catch(e){return false;}
+}
+
+function doSave(){var ok=saveRec();toast(ok?'Saved ✓':'Storage full');}
+
+// HOME
+function goHome(){
+  el('vHome').style.display='block';el('vApp').style.display='none';
+  el('btnHome').style.display='none';el('btnSave').style.display='none';
+  renderHome();
+}
+
+function renderHome(){
+  var list=loadAll(),c=el('ilist');c.innerHTML='';
+  if(!list.length){c.innerHTML='<div class="empt"><div class="empt-ico">&#128203;</div><p>No saved inspections yet.<br>Tap <strong>New Inspection</strong> to start.</p></div>';return;}
+  for(var i=0;i<list.length;i++){
+    var r=list[i];
+    var d=new Date(r.ts);
+    var ds=isNaN(d.getTime())?'':d.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+    var ico=r.ptype==='commercial'?'&#127970;':'&#127968;';
+    var htm={'in':'Move-In','out':'Move-Out','periodic':'Inspection'};
+    var ht=htm[r.htype]||r.htype||'';
+    var div=document.createElement('div');
+    div.className='icard';
+    var rid=r.id;
+    div.innerHTML='<div class="icard-top"><div class="icard-ico">'+ico+'</div>'
+      +'<div class="icard-info"><div class="icard-title">'+esc(r.addr)+'</div>'
+      +'<div class="icard-meta">'+ht+(ds?' · '+ds:'')+'</div>'
+      +'<span class="'+(r.done?'badge-done':'badge-prog')+'">'+(r.done?'Complete':'In Progress')+'</span>'
+      +'</div>'
+      +'<button class="btn btn-r btn-sm" onclick="event.stopPropagation();delRec(\''+rid+'\')" style="color:#8b2635;">&#128465;</button>'
+      +'</div>'
+      +'<div class="icard-btns">'
+      +'<button class="btn btn-o" style="flex:1;" onclick="event.stopPropagation();viewSaved(\''+rid+'\')">&#128196; View &amp; Share PDF</button>'
+      +'<button class="btn btn-r" style="flex:1;" onclick="event.stopPropagation();openRec(\''+rid+'\')">&#9998; Edit</button>'
+      +'</div>';
+    c.appendChild(div);
+  }
+}
+
+function delRec(id){if(!confirm('Delete?'))return;var l=loadAll().filter(function(x){return x.id!==id;});saveAll(l);renderHome();}
+
+// NEW / OPEN
+function newInsp(){
+  cId=uid();S={rooms:[],keys:[],nR:1,nK:1};pQty={};
+  showApp();clearFlds();
+  var t=today();
+  ['fDate','fMDate','fSLD','fSTD'].forEach(function(id){var e=el(id);if(e&&!e.value)e.value=t;});
+  loadTpl();initKeys();renderS2();renderKeys();
+  el('rptSec').style.display='none';
+  goStep(1);
+}
+
+function openRec(id){
+  var list=loadAll(),rec=null;
+  for(var i=0;i<list.length;i++){if(list[i].id===id){rec=list[i];break;}}
+  if(!rec)return;
+  cId=id;S=rec.S||{rooms:[],keys:[],nR:1,nK:1};
+  if(!S.rooms)S.rooms=[];if(!S.keys)S.keys=[];
+  for(var i=0;i<S.keys.length;i++){if(!S.keys[i].photos)S.keys[i].photos=[];}
+  for(var i=0;i<S.rooms.length;i++){for(var j=0;j<S.rooms[i].items.length;j++){if(!S.rooms[i].items[j].photos)S.rooms[i].items[j].photos=[];}}
+  pQty={};for(var i=0;i<S.rooms.length;i++){var tk=S.rooms[i].typeKey;if(tk)pQty[tk]=(pQty[tk]||0)+1;}
+  showApp();
+  if(rec.fields){for(var k in rec.fields){if(k==='_sL'||k==='_sT')continue;var e=el(k);if(e)e.value=rec.fields[k];}}
+  if(rec.fields&&rec.fields._sL)restSig('L',rec.fields._sL);
+  if(rec.fields&&rec.fields._sT)restSig('T',rec.fields._sT);
+  el('rptSec').style.display='none';
+  renderS2();renderKeys();goStep(1);
+}
+
+function showApp(){
+  el('vHome').style.display='none';el('vApp').style.display='block';
+  el('btnHome').style.display='inline-flex';el('btnSave').style.display='inline-flex';
+  initSig('L');initSig('T');
+  var ft=el('fType');
+  if(ft&&!ft._li){ft.addEventListener('change',function(){pQty={};loadTpl();renderS2();});ft._li=true;}
+}
+
+function clearFlds(){for(var i=0;i<FLDS.length;i++){var e=el(FLDS[i]);if(e)e.value=''}clrSig('L');clrSig('T');}
+
+function viewSaved(id){
+  var list=loadAll(),rec=null;
+  for(var i=0;i<list.length;i++){if(list[i].id===id){rec=list[i];break;}}
+  if(!rec)return;
+  var pId=cId,pS=S;cId=id;S=rec.S||{rooms:[],keys:[],nR:1,nK:1};
+  if(!S.rooms)S.rooms=[];if(!S.keys)S.keys=[];
+  for(var i=0;i<S.keys.length;i++){if(!S.keys[i].photos)S.keys[i].photos=[];}
+  for(var i=0;i<S.rooms.length;i++){for(var j=0;j<S.rooms[i].items.length;j++){if(!S.rooms[i].items[j].photos)S.rooms[i].items[j].photos=[];}}
+  var sv={};
+  if(rec.fields){for(var k in rec.fields){if(k==='_sL'||k==='_sT')continue;var e=el(k);if(e){sv[k]=e.value;e.value=rec.fields[k];}}}
+  var html='';
+  try{html=buildRpt();}catch(e){alert('Error: '+e.message);}
+  cId=pId;S=pS;
+  for(var k in sv){var e=el(k);if(e)e.value=sv[k];}
+  if(!html)return;
+  var pg=el('pdfp');pg.innerHTML=html;
+  // Restore signatures
+  var imgs=pg.getElementsByTagName('img');
+  var sL=rec.fields&&rec.fields._sL?rec.fields._sL:'';
+  var sT=rec.fields&&rec.fields._sT?rec.fields._sT:'';
+  var sc=0;
+  for(var i=0;i<imgs.length;i++){if(imgs[i].getAttribute('data-sig')==='1'){if(sc===0&&sL)imgs[i].src=sL;if(sc===1&&sT)imgs[i].src=sT;sc++;}}
+  el('rptOut').innerHTML=pg.innerHTML;
+  el('pdfm').className='pdfm open';document.body.style.overflow='hidden';
+}
+
+function loadFile(ev){
+  var f=ev.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    try{var rec=JSON.parse(e.target.result);if(!rec.id)rec.id=uid();rec.ts=Date.now();
+    var l=loadAll(),idx=-1;for(var i=0;i<l.length;i++){if(l[i].id===rec.id){idx=i;break;}}
+    if(idx>=0)l[idx]=rec;else l.unshift(rec);saveAll(l);renderHome();toast('Loaded ✓');}
+    catch(e){toast('Invalid file');}
+  };r.readAsText(f);ev.target.value='';
+}
+
+// STEP NAV
+function goStep(n){
+  if(n===3)buildAssess();
+  if(n===5){el('rptSec').style.display='none';}
+  for(var i=1;i<=5;i++){
+    var v=el('v'+i);if(v)v.style.display=i===n?'block':'none';
+    var s=el('st'+i);if(s)s.className='stp'+(i===n?' act':i<n?' done':'');
+  }
+  if(cId)saveRec();
+  window.scrollTo(0,0);
+}
+
+// TEMPLATES
+function loadTpl(){
+  var type=fv('fType')||'commercial';var tpl=RT[type]||RT.commercial;
+  pQty={};for(var i=0;i<tpl.length;i++)pQty[tpl[i].k]=tpl[i].d;
+  rebuildRooms();
+}
+
+function rebuildRooms(){
+  var type=fv('fType')||'commercial';var tpl=RT[type]||RT.commercial;
+  var cust=[];for(var i=0;i<S.rooms.length;i++){if(S.rooms[i].isC)cust.push(S.rooms[i]);}
+  S.rooms=[];S.nR=1;
+  for(var ti=0;ti<tpl.length;ti++){
+    var rt=tpl[ti];var qty=pQty[rt.k]||0;
+    for(var q=0;q<qty;q++){
+      var rm=mkRoom(sLabel(rt,q,qty),rt.i);rm.typeKey=rt.k;
+      for(var ii=0;ii<rt.it.length;ii++)rm.items.push(mkItem(rt.it[ii]));
+      S.rooms.push(rm);
+    }
+  }
+  for(var i=0;i<cust.length;i++){cust[i].id=S.nR++;S.rooms.push(cust[i]);}
+}
+
+function sLabel(rt,idx,total){
+  if(rt.k==='bedroom'){if(idx===0)return'Master Bedroom';if(idx===1)return'Bedroom 2';if(idx===2)return'Bedroom 3';return'Bedroom '+(idx+1);}
+  if(rt.k==='bathroom'){if(total===1)return'Bathroom';if(idx===0)return'Main Bathroom';if(idx===1)return'Ensuite';return'Bathroom '+(idx+1);}
+  if(rt.k==='living'){if(total===1)return'Living Room';if(idx===0)return'Living Room';return'Common Room '+(idx+1);}
+  if(rt.k==='meeting'){if(total===1)return'Meeting Room';return'Meeting Room '+(idx+1);}
+  if(total===1)return rt.l;return rt.l+' '+(idx+1);
+}
+
+function mkRoom(n,i){return{id:S.nR++,name:n,ico:i,items:[],notes:'',isC:false};}
+function mkItem(n){return{id:uid(),name:n,crossed:false,cond:null,notes:'',photos:[]};}
+
+// S2
+function renderS2(){
+  renderPicker();
+  var c=el('rCfg');c.innerHTML='';
+  for(var i=0;i<S.rooms.length;i++)renderRB(S.rooms[i]);
+}
+
+function renderPicker(){
+  var type=fv('fType')||'commercial';var tpl=RT[type]||RT.commercial;var c=el('rpick');c.innerHTML='';
+  for(var i=0;i<tpl.length;i++){
+    var rt=tpl[i];var qty=pQty[rt.k]!==undefined?pQty[rt.k]:rt.d;
+    var d=document.createElement('div');d.className='rpc';
+    d.innerHTML='<div style="font-size:16px;">'+rt.i+'</div><div class="rpc-lbl">'+rt.l+'</div>'
+      +'<div class="rqty"><button class="rqb" onclick="chPQ(\''+rt.k+'\',-1)">&#8722;</button>'
+      +'<span class="rqv" id="pq-'+rt.k+'">'+qty+'</span>'
+      +'<button class="rqb" onclick="chPQ(\''+rt.k+'\',1)">+</button></div>';
+    c.appendChild(d);
+  }
+}
+
+function chPQ(k,d){pQty[k]=Math.max(0,(pQty[k]||0)+d);var e=el('pq-'+k);if(e)e.textContent=pQty[k];rebuildRooms();renderS2();}
+
+function renderRB(room){
+  var c=el('rCfg');var w=document.createElement('div');w.className='rb';w.id='rc-'+room.id;
+  var rid=room.id;
+  w.innerHTML='<div class="rbh"><span>'+room.ico+'</span>'
+    +'<input class="rbhi" value="'+esc(room.name)+'" oninput="updRN('+rid+',this.value)">'
+    +'<button onclick="rmRoom('+rid+')" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:16px;padding:0 4px;">&#10005;</button></div>'
+    +'<div id="rl-'+rid+'"></div>'
+    +'<div class="addi"><span style="color:#555;">+</span><input class="addi-inp" placeholder="Add item..." id="ni-'+rid+'" onkeydown="if(event.keyCode===13)addRI('+rid+')">'
+    +'<button class="addi-btn" onclick="addRI('+rid+')">&#8629;</button></div>';
+  c.appendChild(w);renderRL(room);
+}
+
+function renderRL(room){
+  var c=el('rl-'+room.id);if(!c)return;c.innerHTML='';
+  for(var i=0;i<room.items.length;i++){
+    var it=room.items[i];var iid=it.id;var rid=room.id;
+    var div=document.createElement('div');div.className='irow'+(it.crossed?' xd':'');
+    div.innerHTML='<input class="inp" value="'+esc(it.name)+'"'+(it.crossed?' disabled':'')
+      +' oninput="updIN(\''+iid+'\','+rid+',this.value)">'
+      +'<button class="xbtn'+(it.crossed?' on':'')+'" onclick="togX(\''+iid+'\','+rid+')">'+(it.crossed?'&#8617; Restore':'&#10005; N/A')+'</button>'
+      +'<button class="dbtn" onclick="delI(\''+iid+'\','+rid+'\')">&#128465;</button>';
+    c.appendChild(div);
+  }
+}
+
+function updRN(rid,v){var r=gR(rid);if(r)r.name=v;}
+function updIN(iid,rid,v){var it=gIt(iid,rid);if(it)it.name=v;}
+function togX(iid,rid){var it=gIt(iid,rid);if(!it)return;it.crossed=!it.crossed;renderRL(gR(rid));}
+function delI(iid,rid){var r=gR(rid);if(!r)return;r.items=r.items.filter(function(x){return x.id!==iid;});renderRL(r);}
+function addRI(rid){var inp=el('ni-'+rid);if(!inp||!inp.value.trim())return;var r=gR(rid);if(!r)return;r.items.push(mkItem(inp.value.trim()));inp.value='';renderRL(r);}
+function rmRoom(rid){if(!confirm('Remove room?'))return;S.rooms=S.rooms.filter(function(r){return r.id!==rid;});renderS2();}
+function addQ(n,i){var rm=mkRoom(n,i);rm.isC=true;rm.items=[mkItem('Flooring'),mkItem('Walls & ceiling'),mkItem('Lighting'),mkItem('Power points')];S.rooms.push(rm);renderS2();}
+function addCust(){var n=prompt('Room name:');if(!n)return;var rm=mkRoom(n.trim(),'&#128230;');rm.isC=true;rm.items=[mkItem('Flooring'),mkItem('Walls & ceiling'),mkItem('Lighting')];S.rooms.push(rm);renderS2();}
+
+// ASSESS
+function buildAssess(){
+  var cont=el('aArea'),nav=el('rnav');cont.innerHTML='';nav.innerHTML='';
+  for(var i=0;i<S.rooms.length;i++){
+    var room=S.rooms[i];
+    var pill=document.createElement('button');
+    pill.className='rnb';pill.id='rn-'+room.id;pill.innerHTML=room.ico+' '+room.name;
+    pill.setAttribute('data-rid',room.id);
+    pill.onclick=(function(rid){return function(){var e=el('ar-'+rid);if(e)e.scrollIntoView({behavior:'smooth'});};})(room.id);
+    nav.appendChild(pill);
+    var div=document.createElement('div');div.className='arm';div.id='ar-'+room.id;
+    var ai=gAI(room);
+    div.innerHTML='<div class="armh" onclick="togAR('+room.id+')">'
+      +'<h3>'+room.ico+' '+room.name+'</h3>'
+      +'<span class="rp" id="rp-'+room.id+'">'+cDone(room)+'/'+ai.length+' assessed</span>'
+      +'</div><div id="ab-'+room.id+'"></div>';
+    cont.appendChild(div);renderAI(room);
+  }
+  updStats();
+}
+
+function renderAI(room){
+  var body=el('ab-'+room.id);if(!body)return;body.innerHTML='';
+  var ai=gAI(room);
+  if(!ai.length){body.innerHTML='<div style="padding:12px 16px;font-size:13px;color:#555;">All items marked N/A.</div>';return;}
+  for(var i=0;i<ai.length;i++){
+    var item=ai[i];var iid=item.id;var rid=room.id;
+    var thumbs='';for(var p=0;p<item.photos.length;p++){thumbs+='<img class="pht" src="'+item.photos[p].d+'" onclick="openLB(\'i\',\''+iid+'\','+p+')" alt="">';}
+    var div=document.createElement('div');div.className='ait';
+    div.innerHTML='<div class="ain">'+esc(item.name)+'</div>'
+      +'<div class="cbts">'
+      +'<button class="cbt good'+(item.cond==='good'?' sel':'')+'" onclick="setCond(\''+iid+'\','+rid+',\'good\',this)">Good</button>'
+      +'<button class="cbt fair'+(item.cond==='fair'?' sel':'')+'" onclick="setCond(\''+iid+'\','+rid+',\'fair\',this)">Fair</button>'
+      +'<button class="cbt poor'+(item.cond==='poor'?' sel':'')+'" onclick="setCond(\''+iid+'\','+rid+',\'poor\',this)">Poor</button>'
+      +'</div>'
+      +'<div class="air">'
+      +'<input class="ni" type="text" placeholder="Note..." value="'+esc(item.notes)+'" oninput="setN(\''+iid+'\','+rid+',this.value)">'
+      +'<div class="ph-row">'+thumbs
+      +'<label class="pha">&#128247;<input type="file" accept="image/*" multiple style="display:none" onchange="upPics(event,\''+iid+'\','+rid+')"></label>'
+      +'</div></div>';
+    body.appendChild(div);
+  }
+}
+
+function togAR(rid){var b=el('ab-'+rid);if(!b)return;b.style.display=b.style.display==='none'?'block':'none';}
+
+function setCond(iid,rid,cond,btn){
+  var it=gIt(iid,rid);if(!it)return;
+  it.cond=it.cond===cond?null:cond;
+  var btns=btn.parentNode.querySelectorAll('.cbt');
+  for(var i=0;i<btns.length;i++)btns[i].className=btns[i].className.replace(' sel','');
+  if(it.cond)btn.className+=' sel';
+  updStats();
+}
+
+function setN(iid,rid,v){var it=gIt(iid,rid);if(it)it.notes=v;}
+
+function updStats(){
+  var all=[];for(var i=0;i<S.rooms.length;i++){var a=gAI(S.rooms[i]);for(var j=0;j<a.length;j++)all.push(a[j]);}
+  var good=0,iss=0,photos=0,done=0;
+  for(var i=0;i<all.length;i++){
+    if(all[i].cond==='good')good++;
+    if(all[i].cond==='poor'||all[i].cond==='fair')iss++;
+    if(all[i].cond)done++;
+    photos+=all[i].photos.length;
+  }
+  se('sR',S.rooms.length);se('sI',all.length);se('sG',good);se('sIs',iss);se('sP',photos);
+  var pct=all.length?Math.round(done/all.length*100):0;
+  var pf=el('pbf');if(pf)pf.style.width=pct+'%';
+  var pl=el('pbl');if(pl)pl.textContent=pct+'% assessed ('+done+'/'+all.length+', '+photos+' photos)';
+  for(var i=0;i<S.rooms.length;i++){
+    var room=S.rooms[i];var a=gAI(room);var d=cDone(room);
+    var pill=el('rn-'+room.id);
+    if(pill)pill.className='rnb'+(a.length&&d===a.length?' done':d>0?' part':'');
+    var rp=el('rp-'+room.id);if(rp)rp.textContent=d+'/'+a.length+' assessed';
+  }
+}
+
+// PHOTOS
+function upPics(ev,iid,rid){
+  var it=gIt(iid,rid);if(!it)return;
+  var files=ev.target.files;var total=files.length;var done=0;
+  for(var f=0;f<files.length;f++){
+    if(!files[f].type.match(/^image\//)){total--;continue;}
+    (function(file){
+      var reader=new FileReader();
+      reader.onload=function(e){
+        var img=new Image();
+        img.onload=function(){
+          var cv=document.createElement('canvas');var mw=800,sc=img.width>mw?mw/img.width:1;
+          cv.width=img.width*sc;cv.height=img.height*sc;
+          cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+          it.photos.push({n:file.name,d:cv.toDataURL('image/jpeg',0.75)});
+          done++;if(done>=total){var r=gR(rid);renderAI(r);updStats();toast(done+' photo'+(done>1?'s':'')+' added ✓');}
+        };img.src=e.target.result;
+      };reader.readAsDataURL(file);
+    })(files[f]);
+  }
+}
+
+function upKPics(ev,kid){
+  var k=gK(kid);if(!k)return;
+  var files=ev.target.files;var total=files.length;var done=0;
+  for(var f=0;f<files.length;f++){
+    if(!files[f].type.match(/^image\//)){total--;continue;}
+    (function(file){
+      var reader=new FileReader();
+      reader.onload=function(e){
+        var img=new Image();
+        img.onload=function(){
+          var cv=document.createElement('canvas');var mw=800,sc=img.width>mw?mw/img.width:1;
+          cv.width=img.width*sc;cv.height=img.height*sc;
+          cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+          k.photos.push({n:file.name,d:cv.toDataURL('image/jpeg',0.75)});
+          done++;if(done>=total){renderKeys();toast(done+' photo'+(done>1?'s':'')+' added ✓');}
+        };img.src=e.target.result;
+      };reader.readAsDataURL(file);
+    })(files[f]);
+  }
+}
+
+// LIGHTBOX
+function openLB(type,id,idx){lbS={type:type,id:id,idx:idx};el('lb').className='lb open';refreshLB();}
+function refreshLB(){
+  if(!lbS)return;var photos,name;
+  if(lbS.type==='k'){var k=gK(lbS.id);photos=k?k.photos:[];name=k?k.l:'';}
+  else{var it=gItById(lbS.id);photos=it?it.photos:[];name=it?it.name:'';}
+  if(!photos||!photos.length){clsLB();return;}
+  if(lbS.idx>=photos.length)lbS.idx=0;
+  el('lbImg').src=photos[lbS.idx].d;
+  el('lbCap').textContent=name+' '+(lbS.idx+1)+'/'+photos.length;
+}
+function navLB(d){
+  if(!lbS)return;var photos;
+  if(lbS.type==='k'){var k=gK(lbS.id);photos=k?k.photos:[];}
+  else{var it=gItById(lbS.id);photos=it?it.photos:[];}
+  lbS.idx=(lbS.idx+d+photos.length)%photos.length;refreshLB();
+}
+function clsLB(){el('lb').className='lb';}
+document.addEventListener('keydown',function(e){
+  if(el('lb').className.indexOf('open')<0)return;
+  if(e.keyCode===27)clsLB();if(e.keyCode===37)navLB(-1);if(e.keyCode===39)navLB(1);
+});
+
+// KEYS
+function initKeys(){S.keys=[];S.nK=1;for(var i=0;i<DKEYS.length;i++)S.keys.push({id:S.nK++,l:DKEYS[i].l,i:DKEYS[i].i,q:DKEYS[i].q,photos:[]});}
+
+function renderKeys(){
+  var c=el('kArea');c.innerHTML='';
+  for(var i=0;i<S.keys.length;i++){
+    var k=S.keys[i];var kid=k.id;
+    var thumbs='';for(var p=0;p<k.photos.length;p++){thumbs+='<img class="kpht" src="'+k.photos[p].d+'" onclick="openLB(\'k\','+kid+','+p+')" alt="">';}
+    var div=document.createElement('div');div.className='kcard';
+    div.innerHTML='<div class="ktop"><div class="kico">'+k.i+'</div>'
+      +'<div class="kinf"><label>Device / Key</label><input value="'+esc(k.l)+'" oninput="updK('+kid+',this.value)"></div>'
+      +'<div class="qc"><button class="qb" onclick="chQ('+kid+',-1)">&#8722;</button>'
+      +'<span class="qv" id="qty-'+kid+'">'+k.q+'</span>'
+      +'<button class="qb" onclick="chQ('+kid+',1)">+</button></div>'
+      +'<button class="btn btn-r btn-sm" onclick="rmK('+kid+')" style="padding:4px 8px;color:#8b2635;">&#10005;</button></div>'
+      +'<div class="kph">'+thumbs
+      +'<label class="kpha">&#128247;<span>Photo</span><input type="file" accept="image/*" multiple style="display:none" onchange="upKPics(event,'+kid+')"></label>'
+      +'</div>';
+    c.appendChild(div);
+  }
+}
+
+function addKey(){S.keys.push({id:S.nK++,l:'Key / Device',i:'&#128273;',q:1,photos:[]});renderKeys();}
+function rmK(id){S.keys=S.keys.filter(function(k){return k.id!==id;});renderKeys();}
+function updK(id,v){var k=gK(id);if(k)k.l=v;}
+function chQ(id,d){var k=gK(id);if(!k)return;k.q=Math.max(0,k.q+d);var e=el('qty-'+id);if(e)e.textContent=k.q;}
+
+// SIGS
+function initSig(id){
+  var cv=el('cv'+id);if(!cv||cv._init)return;cv._init=true;
+  var ctx=cv.getContext('2d');var drawing=false;
+  function pos(e){var r=cv.getBoundingClientRect();var s=e.touches?e.touches[0]:e;return{x:s.clientX-r.left,y:s.clientY-r.top};}
+  cv.addEventListener('mousedown',function(e){drawing=true;ctx.beginPath();var p=pos(e);ctx.moveTo(p.x,p.y);var h=el('h'+id);if(h)h.style.display='none';});
+  cv.addEventListener('mousemove',function(e){if(!drawing)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#f0ede6';ctx.lineWidth=2;ctx.lineCap='round';ctx.stroke();});
+  cv.addEventListener('mouseup',function(){drawing=false;});
+  cv.addEventListener('mouseleave',function(){drawing=false;});
+  cv.addEventListener('touchstart',function(e){e.preventDefault();drawing=true;ctx.beginPath();var p=pos(e);ctx.moveTo(p.x,p.y);var h=el('h'+id);if(h)h.style.display='none';},{passive:false});
+  cv.addEventListener('touchmove',function(e){e.preventDefault();if(!drawing)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#f0ede6';ctx.lineWidth=2;ctx.lineCap='round';ctx.stroke();},{passive:false});
+  cv.addEventListener('touchend',function(){drawing=false;});
+}
+
+function clrSig(id){var cv=el('cv'+id);if(!cv)return;cv.getContext('2d').clearRect(0,0,cv.width,cv.height);var h=el('h'+id);if(h)h.style.display='block';}
+function restSig(id,src){if(!src||src==='data:,')return;var cv=el('cv'+id);if(!cv)return;var img=new Image();img.onload=function(){cv.getContext('2d').drawImage(img,0,0);var h=el('h'+id);if(h)h.style.display='none';};img.src=src;}
+
+// REPORT
+function genRpt(){
+  try{
+    saveRec(true);
+    var html=buildRpt();
+    el('rptOut').innerHTML=html;
+    el('rptSec').style.display='block';
+    el('rptSec').scrollIntoView({behavior:'smooth'});
+    toast('Report ready ✓');
+  }catch(e){alert('Error: '+e.message);}
+}
+
+function viewPDF(){
+  var content=el('rptOut');
+  if(!content||!content.innerHTML){toast('Generate report first');return;}
+  el('pdfp').innerHTML=content.innerHTML;
+  el('pdfm').className='pdfm open';document.body.style.overflow='hidden';
+}
+function clsPDF(){el('pdfm').className='pdfm';document.body.style.overflow='';}
+
+function doPrint(){
+  var content=el('pdfp').innerHTML||el('rptOut').innerHTML;
+  if(!content){toast('No report');return;}
+  el('printArea').innerHTML=content;
+  window.print();
+}
+
+function openSS(){el('ss').className='ss open';el('ssOv').className='ss-ov open';}
+function closeSS(){el('ss').className='ss';el('ssOv').className='ss-ov';}
+
+function shareNative(){
+  var html=buildHTMLStr();if(!html){toast('Generate report first');return;}
+  var addr=fv('fAddr')||'handover';
+  var name=addr.replace(/[^a-z0-9]/gi,'_').toLowerCase()+'_'+today()+'.html';
+  if(navigator.share){
+    try{
+      var blob=new Blob([html],{type:'text/html'});
+      var file=new File([blob],name,{type:'text/html'});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){
+        navigator.share({files:[file],title:addr+' Handover Report'})
+          .then(function(){closeSS();}).catch(function(e){if(e.name!=='AbortError')toast('Share cancelled');});
+        return;
+      }
+    }catch(e){}
+    navigator.share({title:addr+' Handover Report',text:'Property handover report for '+addr})
+      .then(function(){closeSS();}).catch(function(){});
+    return;
+  }
+  toast('Use Print button to share');
+}
+
+function sharePrint(){closeSS();clsPDF();setTimeout(doPrint,200);}
+
+function shareEmail(){
+  var addr=fv('fAddr')||'Property';var date=fv('fDate')||'';
+  var sub=encodeURIComponent(addr+' - Handover Report'+(date?' '+date:''));
+  var body=encodeURIComponent('Please find the property handover report for '+addr+(date?' dated '+date:'')+'\n\nStonebridge Family Trust');
+  window.location.href='mailto:?subject='+sub+'&body='+body;closeSS();
+}
+
+function doExport(){
+  saveRec();
+  var list=loadAll(),rec=null;
+  for(var i=0;i<list.length;i++){if(list[i].id===cId){rec=list[i];break;}}
+  if(!rec){toast('Save first');return;}
+  var json=JSON.stringify(rec,null,2);
+  try{
+    var blob=new Blob([json],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=url;
+    a.download=(rec.addr||'inspection').replace(/[^a-z0-9]/gi,'_').toLowerCase()+'_'+today()+'.json';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(url);},1000);
+    toast('Exported ✓');
+  }catch(e){
+    var w=window.open('','_blank');
+    if(w){w.document.write('<pre>'+json.replace(/</g,'&lt;')+'</pre>');w.document.close();}
+
+```
+toast('Opened in new tab');
+```
+
+}
+}
+
+function buildHTMLStr(){
+var content=el(‘rptOut’);if(!content||!content.innerHTML)return null;
+var addr=fv(‘fAddr’)||‘Handover Report’;
+return ‘<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>’+esc(addr)+’</title>’
++’<style>body{font-family:Arial,sans-serif;max-width:740px;margin:0 auto;padding:20px;color:#1a1a18;}table{width:100%;border-collapse:collapse;margin-bottom:8px;}th{text-align:left;padding:6px 10px;font-size:10px;text-transform:uppercase;background:#1c3a2f;color:#fff;}td{padding:6px 10px;border-bottom:1px solid #eee;font-size:12px;vertical-align:top;}.bg{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;background:#eaf4ee;color:#2d6a4f;}.bf{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;background:#fbf3e3;color:#b5892a;}.bp{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;background:#f8eaec;color:#8b2635;}.bn{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;background:#eee;color:#888;}.rl{font-size:22px;font-weight:700;color:#1c3a2f;}.dv{display:flex;align-items:center;gap:8px;margin:14px 0 8px;}.dl{flex:1;height:1px;background:#ddd;}.dv span{font-size:10px;font-weight:700;text-transform:uppercase;color:#888;}.rm{display:grid;grid-template-columns:1fr 1fr;gap:5px 16px;margin:12px 0;font-size:12px;}.ml{color:#666;font-size:10px;text-transform:uppercase;}.mv{font-weight:600;}.rphs{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}.rph{width:60px;height:44px;object-fit:cover;border-radius:3px;}.stiles{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap;}.stile{border-radius:5px;padding:9px 12px;text-align:center;flex:1;min-width:50px;}</style>’
++’</head><body>’+content.innerHTML+’</body></html>’;
+}
+
+function buildRpt(){
+var addr=fv(‘fAddr’)||‘Address not specified’;
+var ptype=fv(‘fType’);var typeText=ptype===‘commercial’?‘Commercial Lease’:‘Residential Rental’;
+var htEl=el(‘fHtype’);var htText=htEl?htEl.options[htEl.selectedIndex].text:’’;
+var good=0,fair=0,poor=0,unrated=0,photos=0;
+for(var ri=0;ri<S.rooms.length;ri++){var a=gAI(S.rooms[ri]);for(var ii=0;ii<a.length;ii++){var it=a[ii];if(it.cond===‘good’)good++;else if(it.cond===‘fair’)fair++;else if(it.cond===‘poor’)poor++;else unrated++;photos+=it.photos.length;}}
+var h=’<div style="border-bottom:2px solid #1c3a2f;padding-bottom:14px;margin-bottom:14px;">’
++’<div class="rl">Property Handover Inventory</div>’
++’<div style="font-size:12px;color:#666;margin-top:4px;">’+typeText+’ · ‘+htText+’</div></div>’
++’<div class="rm">’
++’<div><div class="ml">Property</div><div class="mv">’+esc(addr)+’</div></div>’
++’<div><div class="ml">Date</div><div class="mv">’+(fv(‘fDate’)||’—’)+’</div></div>’
++’<div><div class="ml">Landlord</div><div class="mv">’+(esc(fv(‘fLandlord’))||’—’)+’</div></div>’
++’<div><div class="ml">Tenant</div><div class="mv">’+(esc(fv(‘fTenant’))||’—’)+’</div></div>’
++’<div><div class="ml">Manager</div><div class="mv">’+(esc(fv(‘fMgr’))||’—’)+’</div></div>’
++’<div><div class="ml">Lease Term</div><div class="mv">’+(esc(fv(‘fLease’))||’—’)+’</div></div>’
++’</div>’;
+var notes=fv(‘fNotes’);if(notes)h+=’<div style="background:#fbf3e3;border:1px solid #e5ce8a;border-radius:4px;padding:9px 12px;font-size:12px;margin-bottom:14px;"><strong>Notes:</strong> ‘+esc(notes)+’</div>’;
+h+=’<div class="dv"><div class="dl"></div><span>Summary</span><div class="dl"></div></div>’
++’<div class="stiles">’
++stile(good,‘Good’,’#2d6a4f’,’#eaf4ee’)+stile(fair,‘Fair’,’#b5892a’,’#fbf3e3’)
++stile(poor,‘Poor’,’#8b2635’,’#f8eaec’)+stile(unrated,‘Unrated’,’#888’,’#f5f5f5’)
++stile(photos,‘Photos’,’#1c3a2f’,’#f0f0f0’)+’</div>’;
+for(var ri=0;ri<S.rooms.length;ri++){
+var room=S.rooms[ri];var a=gAI(room);if(!a.length)continue;
+h+=’<div class="dv"><div class="dl"></div><span>’+room.ico+’ ‘+room.name+’</span><div class="dl"></div></div>’
++’<table><thead><tr><th>Item</th><th>Condition</th><th>Notes</th></tr></thead><tbody>’;
+for(var ii=0;ii<a.length;ii++){
+var it=a[ii];
+var bc=it.cond?(it.cond===‘good’?‘bg’:it.cond===‘fair’?‘bf’:‘bp’):‘bn’;
+var bl=it.cond?(it.cond.charAt(0).toUpperCase()+it.cond.slice(1)):‘Unrated’;
+var ph=’’;if(it.photos.length){ph=’<div class="rphs">’;for(var p=0;p<it.photos.length;p++){ph+=’<img class="rph" src="'+it.photos[p].d+'" alt="">’;}ph+=’</div>’;}
+h+=’<tr><td>’+esc(it.name)+ph+’</td><td><span class="'+bc+'">’+bl+’</span></td><td style="color:#666;">’+esc(it.notes)+’</td></tr>’;
+}
+h+=’</tbody></table>’;
+}
+// Issues
+var issH=’’;
+for(var ri=0;ri<S.rooms.length;ri++){var room=S.rooms[ri];var a=gAI(room);for(var ii=0;ii<a.length;ii++){var it=a[ii];if(it.cond===‘poor’||it.cond===‘fair’){var bc=it.cond===‘fair’?‘bf’:‘bp’;var bl=it.cond.charAt(0).toUpperCase()+it.cond.slice(1);issH+=’<tr><td>’+esc(it.name)+’</td><td>’+room.ico+’ ‘+room.name+’</td><td><span class="'+bc+'">’+bl+’</span></td><td style="color:#666;">’+esc(it.notes)+’</td></tr>’;}}}
+if(issH)h+=’<div class="dv" style="margin-top:16px;"><div class="dl"></div><span>Items Requiring Attention</span><div class="dl"></div></div><table><thead><tr><th>Item</th><th>Room</th><th>Condition</th><th>Notes</th></tr></thead><tbody>’+issH+’</tbody></table>’;
+// Keys
+if(S.keys&&S.keys.length){
+h+=’<div class="dv" style="margin-top:16px;"><div class="dl"></div><span>Keys & Access</span><div class="dl"></div></div><table><thead><tr><th>Device</th><th>Qty</th><th>Photo</th></tr></thead><tbody>’;
+for(var ki=0;ki<S.keys.length;ki++){var k=S.keys[ki];var kph=’—’;if(k.photos&&k.photos.length){kph=’<div class="rphs">’;for(var p=0;p<k.photos.length;p++){kph+=’<img class="rph" src="'+k.photos[p].d+'" alt="">’;}kph+=’</div>’;}h+=’<tr><td>’+k.i+’ ‘+esc(k.l)+’</td><td>’+k.q+’</td><td>’+kph+’</td></tr>’;}
+h+=’</tbody></table>’;
+}
+// Meters
+var elec=fv(‘fElec’),gas=fv(‘fGas’),water=fv(‘fWater’);
+if(elec||gas||water){
+h+=’<div class="dv" style="margin-top:16px;"><div class="dl"></div><span>Meter Readings</span><div class="dl"></div></div><table><thead><tr><th>Utility</th><th>Reading</th><th>Meter ID</th></tr></thead><tbody>’;
+if(elec)h+=’<tr><td>Electricity</td><td>’+elec+’ kWh</td><td>’+(fv(‘fNMI’)||’—’)+’</td></tr>’;
+if(gas)h+=’<tr><td>Gas</td><td>’+gas+’ MJ</td><td>’+(fv(‘fMIRN’)||’—’)+’</td></tr>’;
+if(water)h+=’<tr><td>Water</td><td>’+water+’ kL</td><td>—</td></tr>’;
+h+=’</tbody></table>’;
+}
+// Sigs
+var sL=’’,sT=’’;
+try{var cvL=el(‘cvL’);if(cvL)sL=cvL.toDataURL();}catch(e){}
+try{var cvT=el(‘cvT’);if(cvT)sT=cvT.toDataURL();}catch(e){}
+h+=’<div class="dv" style="margin-top:18px;"><div class="dl"></div><span>Signatures</span><div class="dl"></div></div>’
++’<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;">’
++sigBlk(‘Landlord / Owner’,fv(‘fSLL’),fv(‘fSLD’),sL)
++sigBlk(‘Tenant / Lessee’,fv(‘fSTL’),fv(‘fSTD’),sT)
++’</div>’
++’<div style="margin-top:16px;padding:9px 12px;background:#f5f5f5;border:1px solid #ddd;border-radius:4px;font-size:11px;color:#888;text-align:center;">’
++‘Generated ‘+new Date().toLocaleDateString(‘en-AU’,{day:‘numeric’,month:‘long’,year:‘numeric’})+’ · Stonebridge Family Trust</div>’;
+return h;
+}
+
+function sigBlk(label,name,date,img){
+return ‘<div style="border:1px solid #ddd;border-radius:4px;padding:12px;">’
++’<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#888;margin-bottom:5px;">’+label+’</div>’
++’<div style="font-size:13px;font-weight:600;">’+(name||’—’)+’</div>’
++’<div style="font-size:11px;color:#888;margin-bottom:5px;">’+(date||’—’)+’</div>’
++(img&&img!==‘data:,’?’<img src="'+img+'" data-sig="1" style="width:100%;height:52px;object-fit:contain;background:#f9f9f9;border-radius:3px;">’:’’)
++’</div>’;
+}
+
+function stile(n,label,color,bg){
+return ‘<div class="stile" style="background:'+bg+';border:1px solid '+color+';">’
++’<div class="n" style="color:'+color+';">’+n+’</div>’
++’<div class="l" style="color:'+color+';">’+label+’</div></div>’;
+}
+
+// HELPERS
+function gR(id){for(var i=0;i<S.rooms.length;i++){if(S.rooms[i].id===id)return S.rooms[i];}return null;}
+function gK(id){for(var i=0;i<S.keys.length;i++){if(S.keys[i].id===id)return S.keys[i];}return null;}
+function gIt(iid,rid){var r=gR(rid);if(!r)return null;for(var i=0;i<r.items.length;i++){if(r.items[i].id===iid)return r.items[i];}return null;}
+function gItById(iid){for(var i=0;i<S.rooms.length;i++){var r=S.rooms[i];for(var j=0;j<r.items.length;j++){if(r.items[j].id===iid)return r.items[j];}}return null;}
+function gAI(room){var a=[];for(var i=0;i<room.items.length;i++){if(!room.items[i].crossed)a.push(room.items[i]);}return a;}
+function cDone(room){var a=gAI(room),d=0;for(var i=0;i<a.length;i++){if(a[i].cond)d++;}return d;}
+</script>
+
+</body>
+</html>
