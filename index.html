@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Handover Entry Report App</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --line:#d9e0ea;
+      --text:#1e293b;
+      --muted:#64748b;
+      --accent:#1d4ed8;
+      --accent-2:#0f172a;
+      --ok:#166534;
+      --warn:#b45309;
+      --bad:#b91c1c;
+      --shadow:0 8px 24px rgba(15,23,42,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,#eef3fb 0%, #f8fafc 100%);
+    }
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:24px;
+    }
+    .hero{
+      background:linear-gradient(135deg,#0f172a,#1d4ed8);
+      color:#fff;
+      border-radius:24px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+    .hero h1{margin:0 0 8px;font-size:30px}
+    .hero p{margin:0;color:rgba(255,255,255,.88)}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:18px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .span-12{grid-column:span 12}
+    .span-8{grid-column:span 8}
+    .span-6{grid-column:span 6}
+    .span-4{grid-column:span 4}
+    .span-3{grid-column:span 3}
+    .span-2{grid-column:span 2}
+    @media (max-width:900px){
+      .span-8,.span-6,.span-4,.span-3,.span-2{grid-column:span 12}
+      .wrap{padding:14px}
+      .hero h1{font-size:24px}
+    }
+    h2,h3{margin:0 0 14px}
+    .section-title{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      margin-bottom:12px;
+    }
+    .subtle{color:var(--muted);font-size:14px}
+    label{
+      display:block;
+      font-size:13px;
+      font-weight:600;
+      color:var(--accent-2);
+      margin-bottom:6px;
+    }
+    input,select,textarea,button{
+      font:inherit;
+    }
+    input[type="text"],input[type="number"],input[type="date"],input[type="time"],textarea,select{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:11px 12px;
+      background:#fff;
+      color:var(--text);
+    }
+    textarea{min-height:100px;resize:vertical}
+    .btn{
+      border:none;
+      border-radius:12px;
+      padding:11px 14px;
+      cursor:pointer;
+      background:var(--accent);
+      color:#fff;
+      font-weight:700;
+    }
+    .btn.secondary{
+      background:#e8eefc;
+      color:var(--accent);
+    }
+    .btn.dark{
+      background:var(--accent-2);
+      color:#fff;
+    }
+    .btn.ghost{
+      background:#fff;
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+    .btn.warn{background:#f59e0b;color:#111827}
+    .btn.bad{background:#dc2626}
+    .row{
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:12px;
+    }
+    .field-6{grid-column:span 6}
+    .field-4{grid-column:span 4}
+    .field-3{grid-column:span 3}
+    .field-2{grid-column:span 2}
+    .field-12{grid-column:span 12}
+    @media (max-width:900px){
+      .field-6,.field-4,.field-3,.field-2{grid-column:span 12}
+    }
+    .check-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+    .tick{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 12px;
+      background:#f8fafc;
+      display:flex;align-items:center;gap:8px;
+    }
+    .room-card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      margin-top:14px;
+      background:#fbfdff;
+    }
+    .room-head{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;
+      margin-bottom:12px;
+      flex-wrap:wrap;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#3730a3;
+      font-size:12px;
+      font-weight:700;
+    }
+    .voice-box,.photo-box{
+      border:1px dashed #b6c3d8;
+      border-radius:14px;
+      padding:12px;
+      background:#fff;
+    }
+    .voice-status{
+      margin-top:8px;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .thumbs{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+    .thumb{
+      border:1px solid var(--line);
+      border-radius:12px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .thumb img{
+      width:100%;
+      height:110px;
+      object-fit:cover;
+      display:block;
+    }
+    .thumb div{
+      padding:6px 8px;
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .report{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:20px;
+    }
+    .report table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:12px;
+    }
+    .report th,.report td{
+      border:1px solid #dbe3ef;
+      padding:10px;
+      text-align:left;
+      vertical-align:top;
+      font-size:14px;
+    }
+    .report th{background:#f1f5f9}
+    .report .mini{
+      font-size:12px;color:var(--muted)
+    }
+    .disclaimer{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+    .footer-space{height:28px}
+    @media print{
+      body{background:#fff}
+      .hero,.no-print{display:none !important}
+      .wrap{max-width:none;padding:0}
+      .card{box-shadow:none;border:none;padding:0}
+      .report{border:none;padding:0}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Property Handover Entry Report</h1>
+      <p>Capture photos, dictate condition notes into text, and generate a clean entry report for handover.</p>
+    </div>
+
+    <div class="grid no-print">
+      <div class="card span-8">
+        <div class="section-title">
+          <div>
+            <h2>1. Handover Details</h2>
+            <div class="subtle">Enter the basic property and inspection information.</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field-12">
+            <label for="address">Property Address</label>
+            <input id="address" type="text" placeholder="e.g. 12 Smith Street, Collingwood VIC 3066">
+          </div>
+          <div class="field-3">
+            <label for="handoverDate">Date</label>
+            <input id="handoverDate" type="date">
+          </div>
+          <div class="field-3">
+            <label for="handoverTime">Time</label>
+            <input id="handoverTime" type="time">
+          </div>
+          <div class="field-3">
+            <label for="inspector">Inspector / Agent</label>
+            <input id="inspector" type="text" placeholder="Name">
+          </div>
+          <div class="field-3">
+            <label for="occupant">Tenant / Occupant</label>
+            <input id="occupant" type="text" placeholder="Name">
+          </div>
+          <div class="field-12">
+            <label for="generalNotes">General Handover Notes</label>
+            <textarea id="generalNotes" placeholder="Key observations, keys handed over, meter checks, special instructions, etc."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card span-4">
+        <h2>2. Rooms / Areas</h2>
+        <div class="subtle" style="margin-bottom:12px;">Choose how many areas you want in this report.</div>
+        <div class="row">
+          <div class="field-4">
+            <label for="bedrooms">Bedrooms</label>
+            <input id="bedrooms" type="number" min="0" value="3">
+          </div>
+          <div class="field-4">
+            <label for="bathrooms">Bathrooms</label>
+            <input id="bathrooms" type="number" min="0" value="2">
+          </div>
+          <div class="field-4">
+            <label for="living">Living</label>
+            <input id="living" type="number" min="0" value="1">
+          </div>
+          <div class="field-4">
+            <label for="kitchen">Kitchen</label>
+            <input id="kitchen" type="number" min="0" value="1">
+          </div>
+          <div class="field-4">
+            <label for="laundry">Laundry</label>
+            <input id="laundry" type="number" min="0" value="1">
+          </div>
+          <div class="field-4">
+            <label for="garage">Garage</label>
+            <input id="garage" type="number" min="0" value="1">
+          </div>
+          <div class="field-12">
+            <label for="extraAreas">Extra Areas</label>
+            <input id="extraAreas" type="text" placeholder="e.g. Study, Balcony, Backyard, Hallway">
+          </div>
+          <div class="field-12">
+            <button class="btn" id="buildRoomsBtn" type="button">Build Room Checklist</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <div class="section-title">
+          <div>
+            <h2>3. Condition Capture</h2>
+            <div class="subtle">Take photos, speak condition notes, and tick observed items for each room.</div>
+          </div>
+          <div class="toolbar">
+            <button class="btn secondary" type="button" id="expandAllBtn">Expand Guidance</button>
+            <button class="btn ghost" type="button" id="clearRoomsBtn">Clear Rooms</button>
+          </div>
+        </div>
+        <div id="roomsContainer">
+          <div class="subtle">Press <b>Build Room Checklist</b> to create your rooms.</div>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <div class="section-title">
+          <div>
+            <h2>4. Generate Report</h2>
+            <div class="subtle">Build a printable entry report from the details you captured.</div>
+          </div>
+          <div class="toolbar">
+            <button class="btn dark" type="button" id="generateReportBtn">Generate Entry Report</button>
+            <button class="btn warn" type="button" id="printBtn">Print / Save as PDF</button>
+          </div>
+        </div>
+        <div class="disclaimer">
+          Voice-to-text uses your browser’s speech recognition when available. On unsupported browsers, you can still record notes manually by typing into the room notes box.
+        </div>
+      </div>
+    </div>
+
+    <div class="card span-12">
+      <div class="report" id="reportArea">
+        <h2>Entry Report Preview</h2>
+        <div class="subtle">Your generated report will appear here.</div>
+      </div>
+    </div>
+
+    <div class="footer-space"></div>
+  </div>
+
+  <script>
+    const roomTemplates = [
+      { key: 'walls', label: 'Walls' },
+      { key: 'floor', label: 'Flooring' },
+      { key: 'ceiling', label: 'Ceiling' },
+      { key: 'doors', label: 'Doors' },
+      { key: 'windows', label: 'Windows' },
+      { key: 'lights', label: 'Lights' },
+      { key: 'power', label: 'Power Points' },
+      { key: 'blinds', label: 'Blinds / Curtains' },
+      { key: 'clean', label: 'Cleanliness' },
+      { key: 'damage', label: 'Damage Noted' }
+    ];
+
+    const roomsContainer = document.getElementById('roomsContainer');
+    const reportArea = document.getElementById('reportArea');
+
+    document.getElementById('buildRoomsBtn').addEventListener('click', buildRooms);
+    document.getElementById('clearRoomsBtn').addEventListener('click', () => {
+      roomsContainer.innerHTML = '<div class="subtle">Press <b>Build Room Checklist</b> to create your rooms.</div>';
+    });
+    document.getElementById('generateReportBtn').addEventListener('click', generateReport);
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+    document.getElementById('expandAllBtn').addEventListener('click', () => {
+      document.querySelectorAll('.room-card textarea').forEach(t => t.focus());
+    });
+
+    function getRoomNames() {
+      const names = [];
+      addSequence(names, 'Bedroom', +document.getElementById('bedrooms').value || 0);
+      addSequence(names, 'Bathroom', +document.getElementById('bathrooms').value || 0);
+      addSequence(names, 'Living Area', +document.getElementById('living').value || 0);
+      addSequence(names, 'Kitchen', +document.getElementById('kitchen').value || 0);
+      addSequence(names, 'Laundry', +document.getElementById('laundry').value || 0);
+      addSequence(names, 'Garage', +document.getElementById('garage').value || 0);
+
+      const extras = document.getElementById('extraAreas').value
+        .split(',')
+        .map(v => v.trim())
+        .filter(Boolean);
+      extras.forEach(x => names.push(x));
+
+      if (!names.length) names.push('General Area');
+      return names;
+    }
+
+    function addSequence(arr, label, count){
+      for(let i=1;i<=count;i++){
+        arr.push(count === 1 ? label : `${label} ${i}`);
+      }
+    }
+
+    function buildRooms(){
+      const roomNames = getRoomNames();
+      roomsContainer.innerHTML = '';
+      roomNames.forEach((roomName, index) => {
+        const roomId = `room_${index}`;
+        const card = document.createElement('div');
+        card.className = 'room-card';
+        card.dataset.roomId = roomId;
+
+        const checks = roomTemplates.map(t => `
+          <label class="tick">
+            <input type="checkbox" data-part="${t.label}">
+            <span>${t.label}</span>
+          </label>
+        `).join('');
+
+        card.innerHTML = `
+          <div class="room-head">
+            <div>
+              <h3 contenteditable="true" spellcheck="false">${roomName}</h3>
+              <div class="subtle">You can rename this room heading directly.</div>
+            </div>
+            <span class="pill">Room ${index + 1}</span>
+          </div>
+
+          <div class="row">
+            <div class="field-3">
+              <label>Overall Condition</label>
+              <select class="overall-condition">
+                <option>Excellent</option>
+                <option selected>Good</option>
+                <option>Fair</option>
+                <option>Poor</option>
+              </select>
+            </div>
+            <div class="field-9">
+              <label>Quick Tick Items</label>
+              <div class="check-grid">${checks}</div>
+            </div>
+
+            <div class="field-6">
+              <label>Manual Notes</label>
+              <textarea class="room-notes" placeholder="Describe paint condition, damage, marks, stains, fixtures, cleanliness, meter checks, missing items, etc."></textarea>
+            </div>
+
+            <div class="field-6">
+              <label>Voice to Text Notes</label>
+              <div class="voice-box">
+                <div class="toolbar">
+                  <button class="btn secondary start-voice-btn" type="button">Start Dictation</button>
+                  <button class="btn ghost stop-voice-btn" type="button">Stop</button>
+                  <button class="btn ghost clear-voice-btn" type="button">Clear Transcript</button>
+                </div>
+                <textarea class="voice-transcript" placeholder="Spoken condition notes will appear here when supported by your browser."></textarea>
+                <div class="voice-status">Ready for dictation.</div>
+              </div>
+            </div>
+
+            <div class="field-12">
+              <label>Photos</label>
+              <div class="photo-box">
+                <input class="photo-input" type="file" accept="image/*" capture="environment" multiple>
+                <div class="thumbs"></div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        roomsContainer.appendChild(card);
+      });
+
+      bindRoomEvents();
+    }
+
+    function bindRoomEvents(){
+      document.querySelectorAll('.room-card').forEach(card => {
+        const photoInput = card.querySelector('.photo-input');
+        const thumbs = card.querySelector('.thumbs');
+        photoInput.addEventListener('change', () => {
+          thumbs.innerHTML = '';
+          [...photoInput.files].forEach(file => {
+            const url = URL.createObjectURL(file);
+            const thumb = document.createElement('div');
+            thumb.className = 'thumb';
+            thumb.innerHTML = `<img src="${url}" alt="Photo"><div>${escapeHtml(file.name)}</div>`;
+            thumbs.appendChild(thumb);
+          });
+        });
+
+        setupSpeechRecognition(card);
+      });
+    }
+
+    function setupSpeechRecognition(card){
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const startBtn = card.querySelector('.start-voice-btn');
+      const stopBtn = card.querySelector('.stop-voice-btn');
+      const clearBtn = card.querySelector('.clear-voice-btn');
+      const transcript = card.querySelector('.voice-transcript');
+      const status = card.querySelector('.voice-status');
+
+      if (!SpeechRecognition){
+        status.textContent = 'Speech recognition is not available in this browser. Type notes manually instead.';
+        startBtn.disabled = true;
+        stopBtn.disabled = true;
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-AU';
+      recognition.interimResults = true;
+      recognition.continuous = true;
+
+      let finalText = '';
+
+      recognition.onstart = () => status.textContent = 'Listening... speak your room condition notes.';
+      recognition.onerror = (e) => status.textContent = 'Voice input error: ' + e.error;
+      recognition.onend = () => status.textContent = 'Dictation stopped.';
+      recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          if (result.isFinal) {
+            finalText += result[0].transcript + ' ';
+          } else {
+            interim += result[0].transcript;
+          }
+        }
+        transcript.value = (finalText + interim).trim();
+      };
+
+      startBtn.onclick = () => recognition.start();
+      stopBtn.onclick = () => recognition.stop();
+      clearBtn.onclick = () => {
+        finalText = '';
+        transcript.value = '';
+        status.textContent = 'Transcript cleared.';
+      };
+    }
+
+    function generateReport(){
+      const address = val('address');
+      const handoverDate = val('handoverDate');
+      const handoverTime = val('handoverTime');
+      const inspector = val('inspector');
+      const occupant = val('occupant');
+      const generalNotes = val('generalNotes');
+
+      const roomCards = [...document.querySelectorAll('.room-card')];
+
+      let roomRows = '';
+      roomCards.forEach((card, idx) => {
+        const roomName = card.querySelector('h3').innerText.trim() || `Room ${idx+1}`;
+        const overall = card.querySelector('.overall-condition').value;
+        const notes = card.querySelector('.room-notes').value.trim();
+        const transcript = card.querySelector('.voice-transcript').value.trim();
+        const ticks = [...card.querySelectorAll('.tick input:checked')].map(cb => cb.dataset.part).join(', ') || '-';
+        const files = card.querySelector('.photo-input').files;
+        const photoNames = files.length ? [...files].map(f => escapeHtml(f.name)).join('<br>') : 'No photos attached';
+
+        roomRows += `
+          <tr>
+            <td><b>${escapeHtml(roomName)}</b></td>
+            <td>${escapeHtml(overall)}</td>
+            <td>${escapeHtml(ticks)}</td>
+            <td>${formatMulti(notes)}</td>
+            <td>${formatMulti(transcript)}</td>
+            <td class="mini">${photoNames}</td>
+          </tr>
+        `;
+      });
+
+      if (!roomRows){
+        roomRows = `<tr><td colspan="6">No rooms added yet.</td></tr>`;
+      }
+
+      reportArea.innerHTML = `
+        <h2>Entry Condition Report</h2>
+        <table>
+          <tr><th style="width:22%">Property Address</th><td>${escapeHtml(address) || '-'}</td></tr>
+          <tr><th>Date</th><td>${escapeHtml(handoverDate) || '-'}</td></tr>
+          <tr><th>Time</th><td>${escapeHtml(handoverTime) || '-'}</td></tr>
+          <tr><th>Inspector / Agent</th><td>${escapeHtml(inspector) || '-'}</td></tr>
+          <tr><th>Tenant / Occupant</th><td>${escapeHtml(occupant) || '-'}</td></tr>
+          <tr><th>General Handover Notes</th><td>${formatMulti(generalNotes)}</td></tr>
+        </table>
+
+        <h3 style="margin-top:20px;">Room-by-Room Condition Summary</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:16%">Room / Area</th>
+              <th style="width:10%">Overall</th>
+              <th style="width:18%">Ticked Items</th>
+              <th style="width:18%">Manual Notes</th>
+              <th style="width:22%">Voice Transcript</th>
+              <th style="width:16%">Attached Photos</th>
+            </tr>
+          </thead>
+          <tbody>${roomRows}</tbody>
+        </table>
+
+        <div style="margin-top:18px" class="disclaimer">
+          This template is a practical handover report tool only. Review local legal requirements before using it as your final tenancy condition report.
+        </div>
+      `;
+      reportArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function val(id){ return document.getElementById(id).value.trim(); }
+
+    function formatMulti(str){
+      if(!str) return '-';
+      return escapeHtml(str).replace(/\n/g, '<br>');
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    const now = new Date();
+    const isoDate = now.toISOString().slice(0,10);
+    const hh = String(now.getHours()).padStart(2,'0');
+    const mm = String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('handoverDate').value = isoDate;
+    document.getElementById('handoverTime').value = `${hh}:${mm}`;
+
+    buildRooms();
+  </script>
+</body>
+</html>
