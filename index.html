@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CInspect V11 Basic</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<h2>CInspect V11 (Basic Connected)</h2>
+
+<h3>Login</h3>
+<input id="email" placeholder="Email"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+<button onclick="signUp()">Sign Up</button>
+<button onclick="signIn()">Sign In</button>
+
+<hr>
+
+<h3>Report</h3>
+<input id="address" placeholder="Property Address"><br><br>
+<textarea id="notes" placeholder="Notes"></textarea><br><br>
+<button onclick="saveReport()">Save Report</button>
+<button onclick="loadReports()">Load My Reports</button>
+
+<ul id="list"></ul>
+
+<script>
+const supabase = window.supabase.createClient(
+  "https://biwojmcftldaxytrrpiy.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpd29qbWNmdGxkYXh5dHJycGl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzMTkyNDUsImV4cCI6MjA5MTg5NTI0NX0.F0n-9YyPgrEfwbcuLODOQpzsDQobyrBFByC9dnvP5uw"
+);
+
+async function signUp() {
+  const { error } = await supabase.auth.signUp({
+    email: email.value,
+    password: password.value
+  });
+  alert(error ? error.message : "Signed up");
+}
+
+async function signIn() {
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email.value,
+    password: password.value
+  });
+  alert(error ? error.message : "Logged in");
+}
+
+async function saveReport() {
+  const { data: user } = await supabase.auth.getUser();
+
+  const { error } = await supabase.from("reports").insert({
+    user_id: user.user.id,
+    address: address.value,
+    notes: notes.value
+  });
+
+  alert(error ? error.message : "Saved");
+}
+
+async function loadReports() {
+  const { data } = await supabase.from("reports").select("*");
+
+  list.innerHTML = "";
+  data.forEach(r => {
+    list.innerHTML += `<li>${r.address} - ${r.notes}</li>`;
+  });
+}
+</script>
+
+</body>
+</html>
