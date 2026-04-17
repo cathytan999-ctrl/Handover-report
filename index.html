@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Clnspect V11 - Delete Enabled</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body style="font-family: Arial; padding:20px;">
+
+<h2>Login</h2>
+<input id="email" placeholder="Email"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+
+<button onclick="signUp()">Sign Up</button>
+<button onclick="signIn()">Sign In</button>
+<button onclick="signOut()">Sign Out</button>
+
+<hr>
+
+<h2>Report</h2>
+<input id="address" placeholder="Property Address"><br><br>
+<textarea id="notes" placeholder="Notes"></textarea><br><br>
+
+<button onclick="saveReport()">Save Report</button>
+<button onclick="loadReports()">Load My Reports</button>
+
+<hr>
+
+<h2>My Reports</h2>
+<div id="reportList"></div>
+
+<script>
+const supabase = window.supabase.createClient(
+  "https://biwojmcftldaxytrrpiy.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpd29qbWNmdGxkYXh5dHJycGl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzMTkyNDUsImV4cCI6MjA5MTg5NTI0NX0.F0n-9YyPgrEfwbcuLODOQpzsDQobyrBFByC9dnvP5uw"
+);
+
+// LOGIN
+async function signUp() {
+  const { error } = await supabase.auth.signUp({
+    email: email.value,
+    password: password.value
+  });
+  alert(error ? error.message : "Signed up. Check email.");
+}
+
+async function signIn() {
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email.value,
+    password: password.value
+  });
+  alert(error ? error.message : "Logged in");
+}
+
+async function signOut() {
+  await supabase.auth.signOut();
+  alert("Signed out");
+}
+
+// SAVE
+async function saveReport() {
+  const user = (await supabase.auth.getUser()).data.user;
+
+  const { error } = await supabase.from('reports').insert([
+    {
+      user_id: user.id,
+      address: address.value,
+      notes: notes.value
+    }
+  ]);
+
+  alert(error ? error.message : "Saved!");
+}
+
+// LOAD
+async function loadReports() {
+  const { data, error } = await supabase.from('reports').select('*');
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  let html = "";
+  data.forEach(r => {
+    html += `
+      <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <b>${r.address}</b><br>
+        ${r.notes}<br><br>
+        <button onclick="deleteReport('${r.id}')">Delete</button>
+      </div>
+    `;
+  });
+
+  reportList.innerHTML = html;
+}
+
+// DELETE
+async function deleteReport(id) {
+  if (!confirm("Delete this report?")) return;
+
+  const { error } = await supabase
+    .from('reports')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    alert("Delete failed: " + error.message);
+  } else {
+    alert("Deleted");
+    loadReports();
+  }
+}
+</script>
+
+</body>
+</html>
