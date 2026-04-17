@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CInspect V11 Connected</title>
+  <style>
+    :root{
+      --line:#d9e0ea; --text:#1e293b; --muted:#64748b; --accent:#1d4ed8; --accent2:#0f172a; --soft:#eef2ff; --shadow:0 8px 24px rgba(15,23,42,.08); --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:linear-gradient(180deg,#eef3fb 0%, #f8fafc 100%)}
+    .wrap{max-width:1320px;margin:0 auto;padding:22px}
+    .hero{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;border-radius:24px;padding:26px;box-shadow:var(--shadow);margin-bottom:18px}
+    .hero h1{margin:0 0 8px;font-size:30px}
+    .hero p{margin:0;color:rgba(255,255,255,.9)}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+    .span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-6{grid-column:span 6}.span-4{grid-column:span 4}
+    .row{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .field-12{grid-column:span 12}.field-9{grid-column:span 9}.field-8{grid-column:span 8}.field-6{grid-column:span 6}.field-4{grid-column:span 4}.field-3{grid-column:span 3}
+    .row > div{min-width:0}
+    @media (max-width:900px){.span-8,.span-6,.span-4,.field-9,.field-8,.field-6,.field-4,.field-3{grid-column:span 12}.wrap{padding:12px}.hero h1{font-size:24px}}
+    h2,h3,h4{margin:0 0 12px}
+    .section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+    .subtle{color:var(--muted);font-size:14px}.mini{font-size:12px;color:var(--muted)}
+    label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+    input,textarea,select,button{font:inherit}
+    input[type="text"],input[type="number"],input[type="date"],input[type="time"],textarea,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--text);max-width:100%}
+    textarea{min-height:110px;resize:vertical;width:100%;max-width:100%;display:block;line-height:1.4;padding:12px 14px}
+    .btn{border:none;border-radius:12px;padding:11px 14px;font-weight:700;cursor:pointer;background:var(--accent);color:#fff}
+    .btn.secondary{background:#e8eefc;color:var(--accent)} .btn.ghost{background:#fff;color:var(--text);border:1px solid var(--line)} .btn.dark{background:var(--accent2);color:#fff} .btn.warn{background:#f59e0b;color:#111827}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap}
+    .room-card{border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:16px;background:#fbfdff}
+    .room-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+    .pill{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:var(--soft);color:#3730a3;font-size:12px;font-weight:700}
+    .item-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    @media (max-width:900px){ .item-grid{grid-template-columns:1fr} }
+    .item-card,.upload-box,.voice-box,.sig-box,.receipt-card,.key-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}
+    .thumbs{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-top:8px}
+    .preview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:8px}
+    @media (max-width:900px){.preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:420px){.preview-grid{grid-template-columns:1fr}}
+    .thumb,.preview-img{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+    .preview-img{padding:0;position:relative}
+    .preview-overlay{position:absolute;left:0;right:0;bottom:0;padding:8px 10px;background:linear-gradient(180deg,rgba(0,0,0,0) 0%, rgba(0,0,0,.62) 100%);color:#fff;font-size:12px;font-weight:700}
+    .photo-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .photo-count{font-size:12px;color:var(--muted);margin-top:6px}
+    .thumb img{width:100%;height:100px;object-fit:cover;display:block}
+    .preview-img img{width:100%;height:170px;object-fit:contain;display:block;background:#f8fafc}
+    .thumb div,.preview-img div{padding:6px;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .thumb-actions{padding:6px;border-top:1px solid var(--line);display:flex;justify-content:flex-end}
+    .thumb-delete{border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 8px;font-size:11px;cursor:pointer}
+    .video-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .video-count{font-size:12px;color:var(--muted);margin-top:6px}
+    .video-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px}
+    @media (max-width:420px){.video-list{grid-template-columns:1fr}}
+    .video-card{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+    .video-card video{width:100%;height:180px;object-fit:cover;display:block;background:#000}
+    .video-card .meta{padding:6px;font-size:11px;color:var(--muted)}
+    .live-recorder{margin-top:8px;display:none}
+    .live-recorder video{width:100%;max-height:220px;background:#000;border-radius:10px}
+    .recording-banner{font-size:12px;color:#b91c1c;margin-top:6px;font-weight:700}
+    .voice-status{margin-top:8px;font-size:13px;color:var(--muted)}
+    canvas{width:100%;height:180px;border:1px solid var(--line);border-radius:12px;background:#fff;touch-action:none}
+    .report{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}
+    .report table{width:100%;border-collapse:collapse;margin-top:12px}
+    .report th,.report td{border:1px solid #dbe3ef;padding:10px;text-align:left;vertical-align:top;font-size:14px}
+    .report th{background:#f1f5f9}
+    .sig-preview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:18px}
+    .sig-preview img{max-width:100%;border:1px solid var(--line);border-radius:10px;background:#fff}
+    .ack-box{padding:12px;border:1px solid var(--line);border-radius:12px;background:#f8fafc}
+    .footer-space{height:24px}.report-section{margin-top:20px}
+
+    .report-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+    .meta-card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+    .meta-card .k{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px}
+    .report-block{margin-top:18px}
+    .report-item-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff;margin-top:10px}
+    .report-item-title{font-size:16px;font-weight:700;margin-bottom:8px}
+    .report-subgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .report-field{border:1px solid var(--line);border-radius:10px;padding:10px;background:#f8fafc}
+    .report-field .k{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px}
+    .media-section{margin-top:10px}
+    .media-title{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px}
+    .report-photo-label{font-size:11px;color:var(--muted);margin-top:4px}
+    @media (max-width:900px){.report-meta,.report-subgrid{grid-template-columns:1fr}}
+
+    @media (max-width:900px){ .sig-preview{grid-template-columns:1fr} }
+    @media print{
+      body{background:#fff}.hero,.no-print{display:none !important}.wrap{max-width:none;padding:0}.card{box-shadow:none;border:none;padding:0}.report{border:none;padding:0}.preview-img img{height:140px}
+    }
+      #address{min-height:56px}
+    .handover-note{min-height:120px}
+
+    .cloud-panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow);margin-bottom:18px}
+    .cloud-status{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:14px}
+    .report-list{display:grid;gap:10px;margin-top:12px}
+    .report-row{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .report-row .meta{font-size:13px;color:var(--muted);margin-top:4px}
+
+
+    .type-badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700;margin-left:8px;border:1px solid var(--line)}
+    .type-entry{background:#eef6ff;color:#1d4ed8}
+    .type-exit{background:#fff7ed;color:#c2410c}
+    .report-stamp{display:inline-block;padding:8px 12px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;font-size:13px;margin-top:8px}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>CInspect V11 Connected</h1>
+      <p>Connected version with login and cloud save/load for report text data.</p>
+    </div>
+
+    <div class="cloud-panel no-print">
+      <h2 style="margin:0 0 10px;">Cloud Save / Load</h2>
+      <div class="row">
+        <div class="field-6">
+          <label for="cloudEmail">Email</label>
+          <input id="cloudEmail" type="text" placeholder="Email">
+        </div>
+        <div class="field-6">
+          <label for="cloudPassword">Password</label>
+          <input id="cloudPassword" type="password" placeholder="Password">
+        </div>
+        <div class="field-12">
+          <div class="toolbar">
+            <button class="btn" type="button" id="cloudSignUpBtn">Sign Up</button>
+            <button class="btn secondary" type="button" id="cloudSignInBtn">Sign In</button>
+            <button class="btn ghost" type="button" id="cloudSignOutBtn">Sign Out</button>
+            <button class="btn secondary" type="button" id="createExitBtn">Create Exit From Loaded Entry</button>
+            <button class="btn dark" type="button" id="cloudSaveBtn">Save To Cloud</button>
+            <button class="btn ghost" type="button" id="cloudLoadBtn">Load My Reports</button>
+          </div>
+          <div class="cloud-status" id="cloudStatus">Ready.</div><div class="mini" style="margin-top:6px;">Use Delete to remove a saved cloud report permanently.</div>
+          <div class="report-list" id="cloudReportList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid no-print">
+      <div class="card span-8">
+        <h2>1. Report Details</h2>
+        <div class="row">
+          <div class="field-3">
+            <label for="reportType">Report Type</label>
+            <select id="reportType">
+              <option value="Entry" selected>Entry Report</option>
+              <option value="Exit">Exit Report</option>
+            </select>
+          </div>
+          <div class="field-9">
+            <label for="address">Property Address</label>
+            <input id="address" type="text" placeholder="e.g. 12 Smith Street, Collingwood VIC 3066">
+          </div>
+          <div class="field-3">
+            <label for="handoverDate">Date</label>
+            <input id="handoverDate" type="date">
+          </div>
+          <div class="field-3">
+            <label for="handoverTime">Time</label>
+            <input id="handoverTime" type="time">
+          </div>
+          <div class="field-3">
+            <label for="inspector">Landlord / Agent</label>
+            <input id="inspector" type="text" placeholder="Name">
+          </div>
+          <div class="field-3">
+            <label for="occupant">Tenant</label>
+            <input id="occupant" type="text" placeholder="Name">
+          </div>
+          <div class="field-12">
+            <label for="generalNotes">General Notes</label>
+            <textarea id="generalNotes" placeholder="Keys handed over, remotes, meter reads, special notes, defects observed, etc."></textarea>
+          </div>
+          <div class="field-12">
+            <label>General Voice Notes</label>
+            <div class="voice-box">
+              <div class="toolbar">
+                <button class="btn secondary" type="button" id="startGeneralVoiceBtn">Start Dictation</button>
+                <button class="btn ghost" type="button" id="stopGeneralVoiceBtn">Stop</button>
+                <button class="btn ghost" type="button" id="clearGeneralVoiceBtn">Clear</button>
+              </div>
+              <textarea id="generalVoiceNotes" placeholder="Spoken notes for the whole report"></textarea>
+              <div class="voice-status" id="generalVoiceStatus">Ready.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card span-4">
+        <h2>2. Rooms / Areas</h2>
+        <div class="row">
+          <div class="field-4"><label for="bedrooms">Bedrooms</label><input id="bedrooms" type="number" min="0" value="3"></div>
+          <div class="field-4"><label for="bathrooms">Bathrooms</label><input id="bathrooms" type="number" min="0" value="2"></div>
+          <div class="field-4"><label for="living">Living</label><input id="living" type="number" min="0" value="1"></div>
+          <div class="field-4"><label for="kitchen">Kitchen</label><input id="kitchen" type="number" min="0" value="1"></div>
+          <div class="field-4"><label for="laundry">Laundry</label><input id="laundry" type="number" min="0" value="1"></div>
+          <div class="field-4"><label for="garage">Garage</label><input id="garage" type="number" min="0" value="0"></div>
+          <div class="field-12"><label for="extraAreas">Extra Areas</label><input id="extraAreas" type="text" placeholder="Study, Balcony, Backyard, Hallway, Storage Room"></div>
+          <div class="field-12"><button class="btn" type="button" id="buildRoomsBtn">Build Room Sections</button></div>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <h2>3. Handover Items</h2>
+        <div class="subtle">Add quantities, notes, and photos for keys, remotes, access cards, manuals, and other items handed over.</div>
+        <div id="handoverItemsContainer" class="row" style="margin-top:12px;"></div>
+      </div>
+
+      <div class="card span-12">
+        <div class="section-title">
+          <div>
+            <h2>4. Room Condition Capture</h2>
+            <div class="subtle">Photos attached to each item will appear in the final report and PDF.</div>
+          </div>
+          <div class="toolbar"><button class="btn ghost" type="button" id="clearRoomsBtn">Clear Rooms</button></div>
+        </div>
+        <div id="roomsContainer"><div class="subtle">Press <b>Build Room Sections</b> to start.</div></div>
+      </div>
+
+      <div class="card span-12">
+        <h2 id="receiptSectionTitle">5. Previous Tenant Cleaning / Service Receipts</h2>
+        <div class="subtle" id="receiptSectionSubtle">Attach evidence such as professional cleaning, air-conditioner cleaning, curtain cleaning, pest treatment, carpet cleaning, or other receipts.</div>
+        <div class="toolbar" style="margin-top:12px;">
+          <button class="btn secondary" type="button" id="addReceiptBtn">Add Receipt / Service Record</button>
+        </div>
+        <div id="receiptsContainer"></div>
+      </div>
+
+      <div class="card span-12">
+        <h2>6. End Summary</h2>
+        <div class="row">
+          <div class="field-12">
+            <label for="summaryNotes">Summary Notes</label>
+            <textarea id="summaryNotes" placeholder="Final summary for this report."></textarea>
+            <div class="toolbar" style="margin-top:8px;">
+              <button class="btn secondary" type="button" id="startSummaryVoiceBtn">Record Summary</button>
+              <button class="btn ghost" type="button" id="stopSummaryVoiceBtn">Stop</button>
+              <button class="btn ghost" type="button" id="clearSummaryVoiceBtn">Clear</button>
+            </div>
+            <div class="voice-status" id="summaryVoiceStatus">Ready.</div>
+          </div>
+          <div class="field-12" id="exitActionWrap" style="display:none;">
+            <label for="exitActionNotes">Items Requiring Attention Before Deposit Return</label>
+            <textarea id="exitActionNotes" placeholder="State clearly what the exiting tenant needs to do before deposit is returned."></textarea>
+            <div class="toolbar" style="margin-top:8px;">
+              <button class="btn secondary" type="button" id="startExitActionVoiceBtn">Record Action Items</button>
+              <button class="btn ghost" type="button" id="stopExitActionVoiceBtn">Stop</button>
+              <button class="btn ghost" type="button" id="clearExitActionVoiceBtn">Clear</button>
+            </div>
+            <div class="voice-status" id="exitActionVoiceStatus">Ready.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <h2>7. Acknowledgement</h2>
+        <div class="ack-box">
+          <div class="field-12" style="margin-bottom:10px;">
+            <label for="ackText">Acknowledgement Text</label>
+            <textarea id="ackText">The landlord / agent and the tenant acknowledge that they have reviewed this report and acknowledge the recorded condition of the property and listed handover items as at the report date.</textarea>
+          </div>
+          <label style="display:flex;gap:8px;align-items:flex-start;font-weight:600;">
+            <input id="acknowledged" type="checkbox" style="width:auto;margin-top:3px;">
+            <span>Both parties acknowledge the report contents before signing.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <h2>8. Signatures</h2>
+        <div class="row">
+          <div class="field-6">
+            <label>Tenant Signature</label>
+            <div class="sig-box">
+              <canvas id="tenantSign"></canvas>
+              <div class="toolbar" style="margin-top:10px;">
+                <button class="btn ghost" type="button" onclick="clearCanvas('tenantSign')">Clear Tenant Signature</button>
+              </div>
+            </div>
+          </div>
+          <div class="field-6">
+            <label>Landlord / Agent Signature</label>
+            <div class="sig-box">
+              <canvas id="agentSign"></canvas>
+              <div class="toolbar" style="margin-top:10px;">
+                <button class="btn ghost" type="button" onclick="clearCanvas('agentSign')">Clear Agent Signature</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <div class="section-title">
+          <div>
+            <h2>9. Generate Report</h2>
+            <div class="subtle">Generate the preview first, then use Print / Save PDF.</div>
+          </div>
+          <div class="toolbar">
+            <button class="btn dark" type="button" id="generateReportBtn">Generate Report</button>
+            <button class="btn warn" type="button" id="printBtn">Print / Save PDF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card span-12">
+      <div class="report" id="reportArea">
+        <h2>Report Preview</h2>
+        <div class="subtle">Your report preview will appear here.</div>
+      </div>
+    </div>
+    <div class="footer-space"></div>
+  </div>
+
+  <script>
+    const roomsContainer = document.getElementById('roomsContainer');
+    const reportArea = document.getElementById('reportArea');
+    const receiptsContainer = document.getElementById('receiptsContainer');
+    const handoverItemsContainer = document.getElementById('handoverItemsContainer');
+
+    const handoverItemDefs = [
+      { id:'houseKeys', label:'House Keys', qty:0 },
+      { id:'mailboxKeys', label:'Mailbox Keys', qty:0 },
+      { id:'garageRemotes', label:'Garage Controllers', qty:0 },
+      { id:'accessCards', label:'Access Cards / Fobs', qty:0 },
+      { id:'manualsIncluded', label:'Manuals Included', qty:'' },
+      { id:'otherItems', label:'Other Handover Items', qty:'' }
+    ];
+
+    document.getElementById('buildRoomsBtn').addEventListener('click', buildRooms);
+    document.getElementById('clearRoomsBtn').addEventListener('click', () => {
+      roomsContainer.innerHTML = '<div class="subtle">Press <b>Build Room Sections</b> to start.</div>';
+    });
+    document.getElementById('addReceiptBtn').addEventListener('click', () => addReceiptCard());
+    document.getElementById('generateReportBtn').addEventListener('click', generateReport);
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    function buildHandoverItems(){
+      handoverItemsContainer.innerHTML = '';
+      handoverItemDefs.forEach(item => {
+        const isNumber = typeof item.qty === 'number';
+        const card = document.createElement('div');
+        card.className = 'field-6';
+        card.innerHTML = `
+          <div class="key-card" data-key-item="${item.id}">
+            <h4>${escapeHtml(item.label)}</h4>
+            <div class="row">
+              <div class="field-4">
+                <label>Quantity / Value</label>
+                <input class="handover-qty" type="${isNumber ? 'number' : 'text'}" ${isNumber ? 'min="0"' : ''} value="${item.qty}" placeholder="${isNumber ? '0' : 'Enter details'}">
+              </div>
+              <div class="field-8">
+                <label>Notes</label>
+                <textarea class="handover-note" rows="4" placeholder="Serial number, description, condition, remarks"></textarea>
+              </div>
+              <div class="field-12">
+                <label>Photo(s)</label>
+                <input class="handover-photo" type="file" accept="image/*" capture="environment" multiple style="display:none;">
+                <div class="photo-controls">
+                  <button class="btn ghost add-photo-btn" type="button">Add More Photos</button>
+                </div>
+                <div class="photo-count">0 photos attached</div>
+                <input class="photo-label-input" type="text" placeholder="Rename photo(s), e.g. Exhibit A or Ceiling crack">
+                <div class="thumbs"></div>
+                <label style="margin-top:10px;">Video Evidence</label>
+                <div class="video-controls">
+                  <button class="btn ghost record-video-btn" type="button">Record Video</button>
+                  <button class="btn ghost stop-video-btn" type="button" disabled>Stop Recording</button>
+                </div>
+                <div class="video-count">0 videos attached</div>
+                <input class="video-label-input" type="text" placeholder="Video label (e.g. Key handover)">
+                <div class="recording-banner"></div>
+                <div class="live-recorder"><video class="live-video" playsinline muted autoplay></video></div>
+                <div class="video-list"></div>
+              </div>
+            </div>
+          </div>
+        `;
+        handoverItemsContainer.appendChild(card);
+      });
+      bindUploads();
+    }
+
+    function getRoomNames() {
+      const names = [];
+      addSequence(names, 'Bedroom', +document.getElementById('bedrooms').value || 0);
+      addSequence(names, 'Bathroom', +document.getElementById('bathrooms').value || 0);
+      addSequence(names, 'Living Area', +document.getElementById('living').value || 0);
+      addSequence(names, 'Kitchen', +document.getElementById('kitchen').value || 0);
+      addSequence(names, 'Laundry', +document.getElementById('laundry').value || 0);
+      addSequence(names, 'Garage', +document.getElementById('garage').value || 0);
+      const extras = document.getElementById('extraAreas').value.split(',').map(v => v.trim()).filter(Boolean);
+      extras.forEach(x => names.push(x));
+      if (!names.length) names.push('General Area');
+      return names;
+    }
+
+    function addSequence(arr, label, count){ for(let i=1;i<=count;i++) arr.push(count === 1 ? label : `${label} ${i}`); }
+
+    function getRoomItems(roomName){
+      const r = roomName.toLowerCase();
+      if (r.includes('bathroom')) return ['Walls','Floor','Ceiling','Door','Window','Lights','Exhaust Fan','Sink','Vanity','Mirror','Tapware','Shower Door','Shower Head','Shower Wall / Tiles','Shower Base / Floor','Toilet','Towel Rail'];
+      if (r.includes('kitchen')) return ['Walls','Floor','Ceiling','Door','Window','Lights','Power Points','Benchtop','Cabinets','Drawers','Sink','Tap','Oven','Cooktop','Rangehood','Dishwasher','Fridge Space','Splashback'];
+      if (r.includes('laundry')) return ['Walls','Floor','Ceiling','Door','Window','Lights','Power Points','Laundry Sink','Tap','Washer Area','Dryer Area','Cabinets','Trough'];
+      if (r.includes('storage')) return ['Walls','Floor','Ceiling','Door','Lights','Shelving','Locks'];
+      if (r.includes('garage')) return ['Walls','Floor','Ceiling','Door','Garage Door','Remote Controller','Lights','Power Points','Storage Shelves'];
+      return ['Walls','Floor','Ceiling','Doors','Windows','Lights','Power Points','Blinds / Curtains','Fixtures / Fittings','Cleanliness'];
+    }
+
+    function buildRooms(){
+      const roomNames = getRoomNames();
+      roomsContainer.innerHTML = '';
+      roomNames.forEach((roomName, index) => {
+        const items = getRoomItems(roomName);
+        const itemHtml = items.map(item => `
+          <div class="item-card">
+            <h4>${escapeHtml(item)}</h4>
+            <label>Condition</label>
+            <select class="item-condition">
+              <option>Excellent</option><option selected>Good</option><option>Fair</option><option>Poor</option><option>Damaged</option>
+            </select>
+            <label style="margin-top:8px;">Notes</label>
+            <textarea class="item-note" placeholder="Describe ${escapeHtml(item)}"></textarea>
+            <label style="margin-top:8px;">Photo(s)</label>
+            <input class="item-photo" type="file" accept="image/*" capture="environment" multiple style="display:none;">
+            <div class="photo-controls">
+              <button class="btn ghost add-photo-btn" type="button">Add More Photos</button>
+            </div>
+            <div class="photo-count">0 photos attached</div>
+            <input class="photo-label-input" type="text" placeholder="Rename photo(s), e.g. Exhibit A or Ceiling crack">
+            <div class="thumbs"></div>
+            <label style="margin-top:10px;">Video Evidence</label>
+            <div class="video-controls">
+              <button class="btn ghost record-video-btn" type="button">Record Video</button>
+              <button class="btn ghost stop-video-btn" type="button" disabled>Stop Recording</button>
+            </div>
+            <div class="video-count">0 videos attached</div>
+            <input class="video-label-input" type="text" placeholder="Video label (e.g. Shower door operation)">
+            <div class="recording-banner"></div>
+            <div class="live-recorder"><video class="live-video" playsinline muted autoplay></video></div>
+            <div class="video-list"></div>
+          </div>
+        `).join('');
+        const card = document.createElement('div');
+        card.className = 'room-card';
+        card.innerHTML = `
+          <div class="room-head">
+            <div><h3 contenteditable="true" spellcheck="false">${escapeHtml(roomName)}</h3><div class="subtle">You can rename this room heading directly.</div></div>
+            <span class="pill">Room ${index + 1}</span>
+          </div>
+          <div class="row">
+            <div class="field-6">
+              <label>Overall Room Condition</label>
+              <select class="overall-condition">
+                <option>Excellent</option><option selected>Good</option><option>Fair</option><option>Poor</option>
+              </select>
+            </div>
+            <div class="field-6">
+              <label>Overall Room Voice / Manual Notes</label>
+              <div class="voice-box">
+                <div class="toolbar">
+                  <button class="btn secondary start-voice-btn" type="button">Start Dictation</button>
+                  <button class="btn ghost stop-voice-btn" type="button">Stop</button>
+                  <button class="btn ghost clear-voice-btn" type="button">Clear</button>
+                </div>
+                <textarea class="voice-transcript" placeholder="Overall room comments"></textarea>
+                <div class="voice-status">Ready.</div>
+              </div>
+            </div>
+            <div class="field-12"><div class="item-grid">${itemHtml}</div></div>
+          </div>
+        `;
+        roomsContainer.appendChild(card);
+      });
+      bindUploads();
+      document.querySelectorAll('.room-card').forEach(card => setupSpeechRecognition(card));
+    }
+
+    function bindUploads(){
+      document.querySelectorAll('.item-photo, .receipt-upload, .handover-photo').forEach(input => {
+        if (input.dataset.bound === '1') return;
+        input.dataset.bound = '1';
+        input._files = input._files || [];
+        input._cloudFiles = input._cloudFiles || [];
+        input.onchange = () => {
+          const newFiles = [...input.files];
+          input._files = input._files.concat(newFiles);
+          renderThumbs(input);
+          input.value = '';
+        };
+      });
+
+      document.querySelectorAll('.add-photo-btn').forEach(btn => {
+        if (btn.dataset.bound === '1') return;
+        btn.dataset.bound = '1';
+        btn.onclick = () => {
+          const box = btn.closest('.item-card, .key-card, .upload-box');
+          const input = box.querySelector('.item-photo, .handover-photo, .receipt-upload');
+          if (input) input.click();
+        };
+      });
+
+      document.querySelectorAll('.record-video-btn').forEach(btn => {
+        if (btn.dataset.bound === '1') return;
+        btn.dataset.bound = '1';
+        btn.onclick = () => startVideoRecording(btn.closest('.item-card, .key-card'));
+      });
+
+      document.querySelectorAll('.stop-video-btn').forEach(btn => {
+        if (btn.dataset.bound === '1') return;
+        btn.dataset.bound = '1';
+        btn.onclick = () => stopVideoRecording(btn.closest('.item-card, .key-card'));
+      });
+    }
+
+    function renderThumbs(input){
+      const box = input.closest('.item-card, .key-card, .upload-box');
+      const container = box.querySelector('.thumbs');
+      const countEl = box.querySelector('.photo-count');
+      const files = input._files || [];
+      const cloudFiles = input._cloudFiles || [];
+      container.innerHTML = '';
+
+      files.forEach((file, idx) => {
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        const deleteHtml = `<div class="thumb-actions"><button class="thumb-delete" type="button">Delete</button></div>`;
+        if (!file.type.startsWith('image/')) {
+          thumb.innerHTML = `<div style="padding:10px;">${escapeHtml(file.name)}</div>${deleteHtml}`;
+          container.appendChild(thumb);
+          const delBtn = thumb.querySelector('.thumb-delete');
+          if (delBtn) delBtn.onclick = () => { input._files.splice(idx,1); renderThumbs(input); };
+        } else {
+          const reader = new FileReader();
+          reader.onload = e => {
+            thumb.innerHTML = `<img src="${e.target.result}" alt="Photo"><div>${escapeHtml(file.name)}</div>${deleteHtml}`;
+            container.appendChild(thumb);
+            const delBtn = thumb.querySelector('.thumb-delete');
+            if (delBtn) delBtn.onclick = () => { input._files.splice(idx,1); renderThumbs(input); };
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      cloudFiles.forEach((file, idx) => {
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        thumb.innerHTML = `<img src="${file.url}" alt="Photo"><div>${escapeHtml(file.name || 'cloud image')}</div><div class="thumb-actions"><button class="thumb-delete" type="button">Delete</button></div>`;
+        container.appendChild(thumb);
+        const delBtn = thumb.querySelector('.thumb-delete');
+        if (delBtn) delBtn.onclick = () => { input._cloudFiles.splice(idx,1); renderThumbs(input); };
+      });
+
+      if (countEl) {
+        const label = input.classList.contains('receipt-upload') ? 'files' : 'photos';
+        countEl.textContent = `${files.length + cloudFiles.length} ${label} attached`;
+      }
+    }
+
+    function setupSpeechRecognition(card){
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const startBtn = card.querySelector('.start-voice-btn');
+      const stopBtn = card.querySelector('.stop-voice-btn');
+      const clearBtn = card.querySelector('.clear-voice-btn');
+      const transcript = card.querySelector('.voice-transcript');
+      const status = card.querySelector('.voice-status');
+      if (!SpeechRecognition){ status.textContent = 'Speech recognition not available in this browser. Type notes manually.'; startBtn.disabled = true; stopBtn.disabled = true; return; }
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-AU'; recognition.interimResults = true; recognition.continuous = true;
+      let finalText = '';
+      recognition.onstart = () => status.textContent = 'Listening...';
+      recognition.onerror = (e) => status.textContent = 'Voice input error: ' + e.error;
+      recognition.onend = () => status.textContent = 'Stopped.';
+      recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          if (result.isFinal) finalText += result[0].transcript + ' ';
+          else interim += result[0].transcript;
+        }
+        transcript.value = (finalText + interim).trim();
+      };
+      startBtn.onclick = () => recognition.start();
+      stopBtn.onclick = () => recognition.stop();
+      clearBtn.onclick = () => { finalText = ''; transcript.value = ''; status.textContent = 'Cleared.'; };
+    }
+
+    function setupGeneralVoice(){
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const startBtn = document.getElementById('startGeneralVoiceBtn');
+      const stopBtn = document.getElementById('stopGeneralVoiceBtn');
+      const clearBtn = document.getElementById('clearGeneralVoiceBtn');
+      const transcript = document.getElementById('generalVoiceNotes');
+      const status = document.getElementById('generalVoiceStatus');
+      if (!SpeechRecognition){ status.textContent = 'Speech recognition not available in this browser. Type notes manually.'; startBtn.disabled = true; stopBtn.disabled = true; return; }
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-AU'; recognition.interimResults = true; recognition.continuous = true;
+      let finalText = '';
+      recognition.onstart = () => status.textContent = 'Listening...';
+      recognition.onerror = (e) => status.textContent = 'Voice input error: ' + e.error;
+      recognition.onend = () => status.textContent = 'Stopped.';
+      recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          if (result.isFinal) finalText += result[0].transcript + ' ';
+          else interim += result[0].transcript;
+        }
+        transcript.value = (finalText + interim).trim();
+      };
+      startBtn.onclick = () => recognition.start();
+      stopBtn.onclick = () => recognition.stop();
+      clearBtn.onclick = () => { finalText = ''; transcript.value = ''; status.textContent = 'Cleared.'; };
+    }
+
+    function addReceiptCard(defaultType=''){
+      const card = document.createElement('div');
+      card.className = 'receipt-card';
+      card.style.marginTop = '12px';
+      card.innerHTML = `
+        <div class="row">
+          <div class="field-4"><label>Receipt / Service Type</label><input class="receipt-type" type="text" placeholder="e.g. Professional cleaning" value="${escapeHtml(defaultType)}"></div>
+          <div class="field-4"><label>Date</label><input class="receipt-date" type="date"></div>
+          <div class="field-4"><label>Provider / Company</label><input class="receipt-provider" type="text" placeholder="e.g. ABC Cleaning"></div>
+          <div class="field-12"><label>Notes</label><textarea class="receipt-notes" placeholder="What was done, invoice number, amount, comments, etc."></textarea></div>
+          <div class="field-12 upload-box">
+            <label>Attach Receipt / Photo</label>
+            <input class="receipt-upload" type="file" accept="image/*,.pdf" multiple style="display:none;">
+            <div class="photo-controls">
+              <button class="btn ghost add-photo-btn" type="button">Add More Photos</button>
+            </div>
+            <div class="photo-count">0 files attached</div>
+            <input class="photo-label-input" type="text" placeholder="Attachment label / exhibit name (e.g. Receipt A)">
+            <div class="thumbs"></div>
+          </div>
+        </div>
+      `;
+      receiptsContainer.appendChild(card);
+      bindUploads();
+    }
+
+    async function filesToDataUrls(fileList){
+      return filesToDataUrlsMixed(fileList || [], []);
+    }
+
+    function readFileAsDataUrl(file){
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function renderAttachmentsBlock(images, label=''){
+      if (!images.length) return '-';
+      return `<div class="preview-grid">` + images.map((img, idx) => {
+        const displayName = label ? `${label}${images.length > 1 ? ' ' + (idx + 1) : ''}` : img.name;
+        const overlayHtml = `<div class="preview-overlay">${escapeHtml(displayName)}</div>`;
+        if (img.type === 'image') return `<div class="preview-img"><img src="${img.dataUrl}" alt="${escapeHtml(displayName)}">${overlayHtml}</div>`;
+        return `<div class="preview-img"><div style="padding:10px;">${escapeHtml(displayName)}</div></div>`;
+      }).join('') + `</div>`;
+    }
+
+    function renderVideoBlock(videos, label=''){
+      if (!videos || !videos.length) return '-';
+      return `<div class="video-list">` + videos.map(v => `
+        <div class="video-card">
+          <video controls playsinline src="${v.url}"></video>
+          <div class="meta">${escapeHtml(label || 'Video Evidence')}<br>${escapeHtml(v.timestamp || '')}<br>${escapeHtml(v.name || '')}</div>
+        </div>
+      `).join('') + `</div>`;
+    }
+
+function getTimestampString(){
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth()+1).padStart(2,'0');
+      const dd = String(now.getDate()).padStart(2,'0');
+      const hh = String(now.getHours()).padStart(2,'0');
+      const mi = String(now.getMinutes()).padStart(2,'0');
+      const ss = String(now.getSeconds()).padStart(2,'0');
+      return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+    }
+
+    async function startVideoRecording(box){
+      if (!box) return;
+      if (!window.isSecureContext) {
+        alert('Video recording needs a secure site (https) or localhost. Once this is hosted on Netlify it will work properly.');
+        return;
+      }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+        alert('This browser does not support in-app video recording.');
+        return;
+      }
+
+      const liveWrap = box.querySelector('.live-recorder');
+      const liveVideo = box.querySelector('.live-video');
+      const recordBtn = box.querySelector('.record-video-btn');
+      const stopBtn = box.querySelector('.stop-video-btn');
+      const banner = box.querySelector('.recording-banner');
+
+      try {
+        const rawStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' },
+          audio: true
+        });
+
+        const hiddenVideo = document.createElement('video');
+        hiddenVideo.playsInline = true;
+        hiddenVideo.muted = true;
+        hiddenVideo.srcObject = rawStream;
+        await hiddenVideo.play();
+
+        liveVideo.srcObject = rawStream;
+        liveWrap.style.display = 'block';
+
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const width = 640;
+        const height = 480;
+        canvas.width = width;
+        canvas.height = height;
+
+        const compositeStream = canvas.captureStream(25);
+        rawStream.getAudioTracks().forEach(track => compositeStream.addTrack(track));
+
+        const recorder = new MediaRecorder(compositeStream, { mimeType: 'video/webm' });
+        const chunks = [];
+        const timestampTaken = getTimestampString();
+
+        const drawLoop = () => {
+          if (!box._recordingActive) return;
+          ctx.drawImage(hiddenVideo, 0, 0, width, height);
+          ctx.fillStyle = 'rgba(0,0,0,0.45)';
+          ctx.fillRect(10, height - 42, 285, 28);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '18px Arial';
+          ctx.fillText(timestampTaken, 18, height - 22);
+          requestAnimationFrame(drawLoop);
+        };
+
+        recorder.ondataavailable = e => {
+          if (e.data && e.data.size > 0) chunks.push(e.data);
+        };
+
+        recorder.onstop = () => {
+          const blob = new Blob(chunks, { type: 'video/webm' });
+          const url = URL.createObjectURL(blob);
+          box._videos = box._videos || [];
+          box._videos.push({
+            blob,
+            url,
+            name: `video-${Date.now()}.webm`,
+            timestamp: timestampTaken
+          });
+          renderVideos(box);
+
+          rawStream.getTracks().forEach(t => t.stop());
+          liveVideo.srcObject = null;
+          liveWrap.style.display = 'none';
+          banner.textContent = '';
+          recordBtn.disabled = false;
+          stopBtn.disabled = true;
+          box._recordingActive = false;
+          box._mediaRecorder = null;
+        };
+
+        box._recordingActive = true;
+        box._mediaRecorder = recorder;
+        box._rawStream = rawStream;
+        recordBtn.disabled = true;
+        stopBtn.disabled = false;
+        banner.textContent = 'Recording... timestamp will be stamped into the video.';
+        drawLoop();
+        recorder.start();
+      } catch (err) {
+        alert('Could not start video recording. Please allow camera/microphone access.');
+      }
+    }
+
+    function stopVideoRecording(box){
+      if (!box || !box._mediaRecorder) return;
+      if (box._mediaRecorder.state !== 'inactive') {
+        box._mediaRecorder.stop();
+      }
+    }
+
+    function renderVideos(box){
+      const container = box.querySelector('.video-list');
+      const countEl = box.querySelector('.video-count');
+      const videos = box._videos || [];
+      container.innerHTML = '';
+      videos.forEach((video, idx) => {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.innerHTML = `
+          <video controls playsinline src="${video.url}"></video>
+          <div class="meta">${escapeHtml(video.timestamp || '')}<br>${escapeHtml(video.name || '')}</div>
+          <div class="thumb-actions"><button class="thumb-delete" type="button">Delete</button></div>
+        `;
+        card.querySelector('.thumb-delete').onclick = () => {
+          URL.revokeObjectURL(video.url);
+          videos.splice(idx, 1);
+          renderVideos(box);
+        };
+        container.appendChild(card);
+      });
+      if (countEl) countEl.textContent = `${videos.length} videos attached`;
+    }
+
+    function renderVideoBlock(videos){
+      if (!videos || !videos.length) return '-';
+      return `<div class="video-list">` + videos.map(v => `
+        <div class="video-card">
+          <video controls playsinline src="${v.url}"></video>
+          <div class="meta">${escapeHtml(v.timestamp || '')}<br>${escapeHtml(v.name || '')}</div>
+        </div>
+      `).join('') + `</div>`;
+    }
+
+    
+
+    function setupDictation(startId, stopId, clearId, textareaId, statusId){
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const startBtn = document.getElementById(startId);
+      const stopBtn = document.getElementById(stopId);
+      const clearBtn = document.getElementById(clearId);
+      const transcript = document.getElementById(textareaId);
+      const status = document.getElementById(statusId);
+      if (!startBtn || !stopBtn || !clearBtn || !transcript || !status) return;
+      if (!SpeechRecognition){
+        status.textContent = 'Speech recognition not available in this browser. Type notes manually.';
+        startBtn.disabled = true;
+        stopBtn.disabled = true;
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-AU';
+      recognition.interimResults = true;
+      recognition.continuous = true;
+      let finalText = '';
+      recognition.onstart = () => status.textContent = 'Listening...';
+      recognition.onerror = (e) => status.textContent = 'Voice input error: ' + e.error;
+      recognition.onend = () => status.textContent = 'Stopped.';
+      recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          if (result.isFinal) finalText += result[0].transcript + ' ';
+          else interim += result[0].transcript;
+        }
+        transcript.value = (finalText + interim).trim();
+      };
+      startBtn.onclick = () => recognition.start();
+      stopBtn.onclick = () => recognition.stop();
+      clearBtn.onclick = () => {
+        finalText = '';
+        transcript.value = '';
+        status.textContent = 'Cleared.';
+      };
+    }
+
+    function updateReportTypeUI(){
+      const reportType = document.getElementById('reportType').value;
+      const exitWrap = document.getElementById('exitActionWrap');
+      const receiptTitle = document.getElementById('receiptSectionTitle');
+      const receiptSubtle = document.getElementById('receiptSectionSubtle');
+      if (exitWrap) exitWrap.style.display = reportType === 'Exit' ? 'block' : 'none';
+      if (receiptTitle) {
+        receiptTitle.textContent = reportType === 'Exit'
+          ? '5. Existing Tenant Cleaning / Service Receipts'
+          : '5. Previous Tenant Cleaning / Service Receipts';
+      }
+      if (receiptSubtle) {
+        receiptSubtle.textContent = reportType === 'Exit'
+          ? 'Attach receipts or proof provided by the existing exiting tenant such as professional cleaning, air-conditioner cleaning, curtain cleaning, pest treatment, carpet cleaning, or other services.'
+          : 'Attach evidence such as professional cleaning, air-conditioner cleaning, curtain cleaning, pest treatment, carpet cleaning, or other receipts.';
+      }
+    }
+
+    function countIssueCondition(value){ return ['Fair','Poor','Damaged'].includes(String(value || '').trim()); }
+
+    function summarizeFindings(findings){
+      return findings.length
+        ? `<ul class="summary-list">${findings.slice(0,20).map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul>`
+        : `<div class="mini">No issues specifically noted.</div>`;
+    }
+
+
+    const SUPABASE_URL = "https://biwojmcftldaxytrrpiy.supabase.co";
+    const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpd29qbWNmdGxkYXh5dHJycGl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzMTkyNDUsImV4cCI6MjA5MTg5NTI0NX0.F0n-9YyPgrEfwbcuLODOQpzsDQobyrBFByC9dnvP5uw";
+    let cloudClient = null;
+
+    function cloudStatus(msg, isError=false){
+      const el = document.getElementById('cloudStatus');
+      if (!el) return;
+      el.textContent = msg;
+      el.style.color = isError ? '#b91c1c' : '#0f172a';
+    }
+    function getCloudClient(){
+      if (!window.supabase || !window.supabase.createClient) throw new Error('Supabase library did not load.');
+      if (!cloudClient) cloudClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+      return cloudClient;
+    }
+    function setValue(id, value){
+      const el = document.getElementById(id);
+      if (el) el.value = value;
+    }
+
+    function makeStoragePath(userId, reportKey, kind, index, filename){
+      const safe = String(filename || 'image.jpg').replace(/[^a-zA-Z0-9._-]/g, '_');
+      return `${userId}/${reportKey}/${kind}/${index}_${Date.now()}_${safe}`;
+    }
+
+    async function uploadPhotoInputToCloud(input, client, userId, reportKey, kind, index){
+      input._cloudFiles = input._cloudFiles || [];
+      input._files = input._files || [];
+      if (!input._files.length) return;
+      for (const file of input._files){
+        if (!file.type.startsWith('image/')) continue;
+        const path = makeStoragePath(userId, reportKey, kind, index, file.name);
+        const { error } = await client.storage.from('reports').upload(path, file, { upsert: false });
+        if (error) throw error;
+        const { data } = client.storage.from('reports').getPublicUrl(path);
+        input._cloudFiles.push({ name: file.name, url: data.publicUrl });
+      }
+      input._files = [];
+      renderThumbs(input);
+    }
+
+    async function uploadAllPhotosToCloud(client, userId, reportKey){
+      const handoverInputs = [...document.querySelectorAll('[data-key-item] .handover-photo')];
+      for (let i = 0; i < handoverInputs.length; i++) {
+        await uploadPhotoInputToCloud(handoverInputs[i], client, userId, reportKey, 'handover', i);
+      }
+      const roomInputs = [...document.querySelectorAll('.room-card .item-photo')];
+      for (let i = 0; i < roomInputs.length; i++) {
+        await uploadPhotoInputToCloud(roomInputs[i], client, userId, reportKey, 'rooms', i);
+      }
+      const receiptInputs = [...document.querySelectorAll('.receipt-card .receipt-upload')];
+      for (let i = 0; i < receiptInputs.length; i++) {
+        await uploadPhotoInputToCloud(receiptInputs[i], client, userId, reportKey, 'receipts', i);
+      }
+    }
+
+    function filesAndCloudToData(items){
+      const results = [];
+      (items || []).forEach(item => {
+        if (!item) return;
+        if (item.url) results.push({ type:'image', name:item.name || 'image', dataUrl:item.url, isCloud:true });
+        else results.push(item);
+      });
+      return results;
+    }
+
+    async function filesToDataUrlsMixed(localFiles, cloudFiles){
+      const files = [...(localFiles || [])];
+      const results = [];
+      for (const file of files){
+        if (!file.type.startsWith('image/')) { results.push({type:'file', name:file.name, dataUrl:''}); continue; }
+        const dataUrl = await readFileAsDataUrl(file);
+        results.push({type:'image', name:file.name, dataUrl});
+      }
+      (cloudFiles || []).forEach(cf => {
+        results.push({ type:'image', name:cf.name || 'image', dataUrl:cf.url, isCloud:true });
+      });
+      return results;
+    }
+
+    function collectReportState(){
+      return {
+        reportType: val('reportType'),
+        address: val('address'),
+        handoverDate: val('handoverDate'),
+        handoverTime: val('handoverTime'),
+        inspector: val('inspector'),
+        occupant: val('occupant'),
+        generalNotes: val('generalNotes'),
+        generalVoiceNotes: val('generalVoiceNotes'),
+        summaryNotes: document.getElementById('summaryNotes') ? val('summaryNotes') : '',
+        exitActionNotes: document.getElementById('exitActionNotes') ? val('exitActionNotes') : '',
+        ackText: val('ackText'),
+        acknowledged: document.getElementById('acknowledged').checked,
+        roomCounts: {
+          bedrooms: val('bedrooms'),
+          bathrooms: val('bathrooms'),
+          living: val('living'),
+          kitchen: val('kitchen'),
+          laundry: val('laundry'),
+          garage: val('garage'),
+          extraAreas: val('extraAreas')
+        },
+        handoverItems: [...document.querySelectorAll('[data-key-item]')].map(card => ({
+          key: card.dataset.keyItem || '',
+          qty: card.querySelector('.handover-qty')?.value || '',
+          note: card.querySelector('.handover-note')?.value || '',
+          photoLabel: card.querySelector('.photo-label-input')?.value || '',
+          videoLabel: card.querySelector('.video-label-input')?.value || '',
+          photoUrls: (card.querySelector('.handover-photo')?._cloudFiles || []).map(f => ({ name:f.name, url:f.url }))
+        })),
+        rooms: [...document.querySelectorAll('.room-card')].map(card => ({
+          name: card.querySelector('h3')?.innerText.trim() || '',
+          overallCondition: card.querySelector('.overall-condition')?.value || '',
+          overallNotes: card.querySelector('.voice-transcript')?.value || '',
+          items: [...card.querySelectorAll('.item-card')].map(item => ({
+            name: item.querySelector('h4')?.innerText.trim() || '',
+            condition: item.querySelector('.item-condition')?.value || '',
+            notes: item.querySelector('.item-note')?.value || '',
+            photoLabel: item.querySelector('.photo-label-input')?.value || '',
+            videoLabel: item.querySelector('.video-label-input')?.value || '',
+            photoUrls: (item.querySelector('.item-photo')?._cloudFiles || []).map(f => ({ name:f.name, url:f.url }))
+          }))
+        })),
+        receipts: [...document.querySelectorAll('.receipt-card')].map(card => ({
+          type: card.querySelector('.receipt-type')?.value || '',
+          date: card.querySelector('.receipt-date')?.value || '',
+          provider: card.querySelector('.receipt-provider')?.value || '',
+          notes: card.querySelector('.receipt-notes')?.value || '',
+          photoUrls: (card.querySelector('.receipt-upload')?._cloudFiles || []).map(f => ({ name:f.name, url:f.url }))
+        }))
+      };
+    }
+    function applyReportState(state){
+      if (!state) return;
+      setValue('reportType', state.reportType || 'Entry');
+      setValue('address', state.address || '');
+      setValue('handoverDate', state.handoverDate || '');
+      setValue('handoverTime', state.handoverTime || '');
+      setValue('inspector', state.inspector || '');
+      setValue('occupant', state.occupant || '');
+      setValue('generalNotes', state.generalNotes || '');
+      setValue('generalVoiceNotes', state.generalVoiceNotes || '');
+      if (document.getElementById('summaryNotes')) setValue('summaryNotes', state.summaryNotes || '');
+      if (document.getElementById('exitActionNotes')) setValue('exitActionNotes', state.exitActionNotes || '');
+      setValue('ackText', state.ackText || '');
+      document.getElementById('acknowledged').checked = !!state.acknowledged;
+      if (state.roomCounts){
+        setValue('bedrooms', state.roomCounts.bedrooms || '0');
+        setValue('bathrooms', state.roomCounts.bathrooms || '0');
+        setValue('living', state.roomCounts.living || '0');
+        setValue('kitchen', state.roomCounts.kitchen || '0');
+        setValue('laundry', state.roomCounts.laundry || '0');
+        setValue('garage', state.roomCounts.garage || '0');
+        setValue('extraAreas', state.roomCounts.extraAreas || '');
+      }
+      updateReportTypeUI();
+      buildRooms();
+      buildHandoverItems();
+      receiptsContainer.innerHTML = '';
+      (state.receipts || []).forEach(r => addReceiptCard(r.type || ''));
+      [...document.querySelectorAll('.receipt-card')].forEach((card, idx) => {
+        const r = (state.receipts || [])[idx] || {};
+        if (card.querySelector('.receipt-type')) card.querySelector('.receipt-type').value = r.type || '';
+        if (card.querySelector('.receipt-date')) card.querySelector('.receipt-date').value = r.date || '';
+        if (card.querySelector('.receipt-provider')) card.querySelector('.receipt-provider').value = r.provider || '';
+        if (card.querySelector('.receipt-notes')) card.querySelector('.receipt-notes').value = r.notes || '';
+        const input = card.querySelector('.receipt-upload');
+        if (input) {
+          input._cloudFiles = r.photoUrls || [];
+          input._files = [];
+          renderThumbs(input);
+        }
+      });
+      [...document.querySelectorAll('[data-key-item]')].forEach(card => {
+        const item = (state.handoverItems || []).find(x => x.key === card.dataset.keyItem);
+        if (!item) return;
+        if (card.querySelector('.handover-qty')) card.querySelector('.handover-qty').value = item.qty || '';
+        if (card.querySelector('.handover-note')) card.querySelector('.handover-note').value = item.note || '';
+        if (card.querySelector('.photo-label-input')) card.querySelector('.photo-label-input').value = item.photoLabel || '';
+        if (card.querySelector('.video-label-input')) card.querySelector('.video-label-input').value = item.videoLabel || '';
+        const input = card.querySelector('.handover-photo');
+        if (input) {
+          input._cloudFiles = item.photoUrls || [];
+          input._files = [];
+          renderThumbs(input);
+        }
+      });
+      [...document.querySelectorAll('.room-card')].forEach((card, idx) => {
+        const room = (state.rooms || [])[idx];
+        if (!room) return;
+        if (card.querySelector('h3')) card.querySelector('h3').innerText = room.name || card.querySelector('h3').innerText;
+        if (card.querySelector('.overall-condition')) card.querySelector('.overall-condition').value = room.overallCondition || 'Good';
+        if (card.querySelector('.voice-transcript')) card.querySelector('.voice-transcript').value = room.overallNotes || '';
+        [...card.querySelectorAll('.item-card')].forEach((itemCard, j) => {
+          const item = (room.items || [])[j];
+          if (!item) return;
+          if (itemCard.querySelector('.item-condition')) itemCard.querySelector('.item-condition').value = item.condition || 'Good';
+          if (itemCard.querySelector('.item-note')) itemCard.querySelector('.item-note').value = item.notes || '';
+          if (itemCard.querySelector('.photo-label-input')) itemCard.querySelector('.photo-label-input').value = item.photoLabel || '';
+          if (itemCard.querySelector('.video-label-input')) itemCard.querySelector('.video-label-input').value = item.videoLabel || '';
+          const input = itemCard.querySelector('.item-photo');
+          if (input) {
+            input._cloudFiles = item.photoUrls || [];
+            input._files = [];
+            renderThumbs(input);
+          }
+        });
+      });
+    }
+
+    async function cloudSignUp(){
+      try{
+        const client = getCloudClient();
+        const email = document.getElementById('cloudEmail').value.trim();
+        const password = document.getElementById('cloudPassword').value;
+        if (!email || !password) throw new Error('Enter email and password.');
+        cloudStatus('Signing up...');
+        const { error } = await client.auth.signUp({ email, password });
+        if (error) throw error;
+        cloudStatus('Signed up successfully.');
+        alert('Signed up successfully. Now tap Sign In.');
+      }catch(err){
+        cloudStatus('Sign up failed: ' + err.message, true);
+        alert('Sign up failed: ' + err.message);
+      }
+    }
+    async function cloudSignIn(){
+      try{
+        const client = getCloudClient();
+        const email = document.getElementById('cloudEmail').value.trim();
+        const password = document.getElementById('cloudPassword').value;
+        if (!email || !password) throw new Error('Enter email and password.');
+        cloudStatus('Signing in...');
+        const { error } = await client.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        cloudStatus('Logged in successfully.');
+        alert('Logged in successfully.');
+      }catch(err){
+        cloudStatus('Sign in failed: ' + err.message, true);
+        alert('Sign in failed: ' + err.message);
+      }
+    }
+    async function cloudSignOut(){
+      try{
+        const client = getCloudClient();
+        await client.auth.signOut();
+        cloudStatus('Signed out.');
+      }catch(err){
+        cloudStatus('Sign out failed: ' + err.message, true);
+      }
+    }
+    async function cloudSaveReport(){
+      try{
+        const client = getCloudClient();
+        const { data: u, error: ue } = await client.auth.getUser();
+        if (ue) throw ue;
+        if (!u.user) throw new Error('Login first.');
+        const reportKey = 'report_' + Date.now();
+        cloudStatus('Uploading photos...');
+        await uploadAllPhotosToCloud(client, u.user.id, reportKey);
+        const state = collectReportState();
+        state._reportKey = reportKey;
+        state._savedAt = getNowStamp();
+        const payload = 'CINSPECT_JSON::' + JSON.stringify(state);
+        cloudStatus('Saving report...');
+        const { error } = await client.from('reports').insert({
+          user_id: u.user.id,
+          address: state.address || 'Untitled report',
+          notes: payload
+        });
+        if (error) throw error;
+        cloudStatus('Saved to cloud.');
+        alert('Saved to cloud.');
+      }catch(err){
+        cloudStatus('Save failed: ' + err.message, true);
+        alert('Save failed: ' + err.message);
+      }
+    }
+    async function cloudLoadReports(){
+      try{
+        const client = getCloudClient();
+        const { data: u, error: ue } = await client.auth.getUser();
+        if (ue) throw ue;
+        if (!u.user) throw new Error('Login first.');
+        cloudStatus('Loading reports...');
+        const { data, error } = await client.from('reports').select('*').eq('user_id', u.user.id).order('created_at', { ascending:false });
+        if (error) throw error;
+        const list = document.getElementById('cloudReportList');
+        list.innerHTML = '';
+        if (!data || !data.length){
+          list.innerHTML = '<div class="cloud-status">No saved reports yet.</div>';
+          cloudStatus('No saved reports found.');
+          return;
+        }
+        data.forEach(row => {
+          const div = document.createElement('div');
+          div.className = 'report-row';
+          let stateForRow = null;
+          try { stateForRow = JSON.parse(String(row.notes || '').replace('CINSPECT_JSON::', '')); } catch(e) {}
+          const type = stateForRow?.reportType || 'Unknown';
+          const badgeClass = type.toLowerCase() === 'entry' ? 'type-entry' : (type.toLowerCase() === 'exit' ? 'type-exit' : '');
+          const stamp = stateForRow?._savedAt || row.created_at || '';
+          div.innerHTML = `<div><div><b>${escapeHtml(row.address || 'Untitled')}</b><span class="type-badge ${badgeClass}">${escapeHtml(type)}</span></div><div class="meta">${escapeHtml(stamp)}</div></div>`;
+
+          const actions = document.createElement('div');
+          actions.className = 'toolbar';
+
+          const loadBtn = document.createElement('button');
+          loadBtn.className = 'btn ghost';
+          loadBtn.type = 'button';
+          loadBtn.textContent = 'Load';
+          loadBtn.onclick = () => {
+            try{
+              const raw = String(row.notes || '');
+              if (!raw.startsWith('CINSPECT_JSON::')) throw new Error('This saved row is not a full CInspect report.');
+              const state = JSON.parse(raw.replace('CINSPECT_JSON::', ''));
+              applyReportState(state);
+              cloudStatus('Loaded report: ' + (row.address || 'Untitled'));
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }catch(err){
+              alert('Load failed: ' + err.message);
+            }
+          };
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'btn ghost';
+          deleteBtn.type = 'button';
+          deleteBtn.textContent = 'Delete';
+          deleteBtn.onclick = async () => {
+            const ok = confirm('Delete this saved cloud report?');
+            if (!ok) return;
+            try{
+              const { error: delErr } = await client.from('reports').delete().eq('id', row.id);
+              if (delErr) throw delErr;
+              div.remove();
+              cloudStatus('Deleted report: ' + (row.address || 'Untitled'));
+            }catch(err){
+              alert('Delete failed: ' + err.message);
+            }
+          };
+
+          actions.appendChild(loadBtn);
+          actions.appendChild(deleteBtn);
+          div.appendChild(actions);
+          list.appendChild(div);
+        });
+        cloudStatus('Loaded ' + data.length + ' report(s).');
+      }catch(err){
+        cloudStatus('Load failed: ' + err.message, true);
+        alert('Load failed: ' + err.message);
+      }
+    }
+
+
+    function getNowStamp(){
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth()+1).padStart(2,'0');
+      const dd = String(now.getDate()).padStart(2,'0');
+      const hh = String(now.getHours()).padStart(2,'0');
+      const mi = String(now.getMinutes()).padStart(2,'0');
+      return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
+    }
+
+    function createExitFromLoadedEntry(){
+      try{
+        const current = collectReportState();
+        if ((current.reportType || '').toLowerCase() !== 'entry') throw new Error('Load or prepare an Entry report first.');
+        const exitState = JSON.parse(JSON.stringify(current));
+        exitState.reportType = 'Exit';
+        exitState.handoverDate = '';
+        exitState.handoverTime = '';
+        exitState.generalNotes = '';
+        exitState.generalVoiceNotes = '';
+        exitState.summaryNotes = '';
+        exitState.exitActionNotes = '';
+        exitState.acknowledged = false;
+
+        (exitState.rooms || []).forEach(room => {
+          room.overallNotes = '';
+          (room.items || []).forEach(item => {
+            item.notes = '';
+            item.photoLabel = '';
+            item.videoLabel = '';
+            item.photoUrls = [];
+            item.videoUrls = [];
+          });
+        });
+
+        (exitState.handoverItems || []).forEach(item => {
+          item.note = '';
+          item.photoLabel = '';
+          item.videoLabel = '';
+          item.photoUrls = [];
+          item.videoUrls = [];
+        });
+
+        (exitState.receipts || []).forEach(r => {
+          r.date = '';
+          r.provider = '';
+          r.notes = '';
+          r.photoUrls = [];
+        });
+
+        if (exitState.signatures) {
+          exitState.signatures.tenant = '';
+          exitState.signatures.agent = '';
+        }
+
+        applyReportState(exitState);
+
+        document.querySelectorAll('.item-photo, .handover-photo, .receipt-upload').forEach(input => {
+          input._files = [];
+          input._cloudFiles = [];
+          renderThumbs(input);
+        });
+
+        document.querySelectorAll('.item-card, .key-card').forEach(box => {
+          box._videos = [];
+          renderVideos(box);
+        });
+
+        ['tenantSign','agentSign'].forEach(id => clearCanvas(id));
+
+        updateReportTypeUI();
+        cloudStatus('Exit report created from currently loaded Entry report.');
+        alert('Exit report created from currently loaded Entry report.');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      } catch (err) {
+        cloudStatus('Create Exit failed: ' + err.message, true);
+        alert('Create Exit failed: ' + err.message);
+      }
+    }
+
+    async function generateReport(){
+      const reportType = val('reportType');
+      const address = val('address');
+      const handoverDate = val('handoverDate');
+      const handoverTime = val('handoverTime');
+      const inspector = val('inspector');
+      const occupant = val('occupant');
+      const generalNotes = val('generalNotes');
+      const generalVoiceNotes = val('generalVoiceNotes');
+      const summaryNotes = val('summaryNotes');
+      const exitActionNotes = val('exitActionNotes');
+      const ackText = val('ackText');
+      const acknowledged = document.getElementById('acknowledged').checked ? 'Yes' : 'No';
+      const roomCards = [...document.querySelectorAll('.room-card')];
+      const receiptCards = [...document.querySelectorAll('.receipt-card')];
+      const handoverCards = [...document.querySelectorAll('[data-key-item]')];
+
+      let totalIssues = 0;
+      let totalPhotos = 0;
+      let totalVideos = 0;
+      let totalReceipts = receiptCards.length;
+      const findings = [];
+
+      let handoverRows = '';
+      const handoverSummary = [];
+      for (const card of handoverCards) {
+        const title = card.querySelector('h4').innerText.trim();
+        const qty = card.querySelector('.handover-qty').value.trim();
+        const note = card.querySelector('.handover-note').value.trim();
+        if (qty || note) {
+          handoverSummary.push(`${title} – ${qty || ''}${note ? ' (' + note + ')' : ''}`.trim());
+        }
+        const photos = await filesToDataUrlsMixed(card.querySelector('.handover-photo')._files || [], card.querySelector('.handover-photo')._cloudFiles || []);
+        const videos = card._videos || [];
+        totalPhotos += photos.filter(p => p.type === 'image').length;
+        totalVideos += videos.length;
+        const photoLabel = card.querySelector('.photo-label-input')?.value.trim() || '';
+        const videoLabel = card.querySelector('.video-label-input')?.value.trim() || '';
+        handoverRows += `
+          <div class="report-item-card">
+            <div class="report-item-title">${escapeHtml(title)}</div>
+            <div class="report-subgrid">
+              <div class="report-field"><div class="k">Quantity / Value</div><div>${escapeHtml(qty) || '-'}</div></div>
+              <div class="report-field"><div class="k">Notes</div><div>${formatMulti(note)}</div></div>
+              <div class="report-field"><div class="k">Photo Label / Exhibit</div><div>${escapeHtml(photoLabel) || '-'}</div></div>
+            </div>
+            <div class="media-section"><div class="media-title">Photos</div>${renderAttachmentsBlock(photos, photoLabel)}</div>
+            <div class="media-section"><div class="media-title">Video Evidence</div>${renderVideoBlock(videos, videoLabel)}</div>
+          </div>
+        `;
+      }
+
+      let roomSections = '';
+      for (const [idx, card] of roomCards.entries()) {
+        const roomName = card.querySelector('h3').innerText.trim() || `Room ${idx+1}`;
+        const overall = card.querySelector('.overall-condition').value;
+        const voice = card.querySelector('.voice-transcript').value.trim();
+        let itemRows = '';
+        for (const itemCard of [...card.querySelectorAll('.item-card')]) {
+          const itemName = itemCard.querySelector('h4').innerText.trim();
+          const condition = itemCard.querySelector('.item-condition').value;
+          const note = itemCard.querySelector('.item-note').value.trim();
+          const images = await filesToDataUrlsMixed(itemCard.querySelector('.item-photo')._files || [], itemCard.querySelector('.item-photo')._cloudFiles || []);
+          const videos = itemCard._videos || [];
+          totalPhotos += images.filter(p => p.type === 'image').length;
+          totalVideos += videos.length;
+          if (countIssueCondition(condition) || note) {
+            totalIssues += 1;
+            findings.push(`${roomName} – ${itemName}${note ? ': ' + note : ' marked ' + condition}`);
+          }
+          const photoLabel = itemCard.querySelector('.photo-label-input')?.value.trim() || '';
+          const videoLabel = itemCard.querySelector('.video-label-input')?.value.trim() || '';
+          itemRows += `
+            <div class="report-item-card">
+              <div class="report-item-title">${escapeHtml(itemName)}</div>
+              <div class="report-subgrid">
+                <div class="report-field"><div class="k">Condition</div><div>${escapeHtml(condition)}</div></div>
+                <div class="report-field"><div class="k">Notes</div><div>${formatMulti(note)}</div></div>
+                <div class="report-field"><div class="k">Photo Label / Exhibit</div><div>${escapeHtml(photoLabel) || '-'}</div></div>
+              </div>
+              <div class="media-section"><div class="media-title">Photos</div>${renderAttachmentsBlock(images, photoLabel)}</div>
+              <div class="media-section"><div class="media-title">Video Evidence</div>${renderVideoBlock(videos, videoLabel)}</div>
+            </div>
+          `;
+        }
+        roomSections += `
+          <div class="report-block">
+            <h3>${escapeHtml(roomName)}</h3>
+            <div class="report-subgrid">
+              <div class="report-field"><div class="k">Overall Room Condition</div><div>${escapeHtml(overall)}</div></div>
+              <div class="report-field" style="grid-column:span 2;"><div class="k">Overall Room Notes</div><div>${formatMulti(voice)}</div></div>
+            </div>
+            ${itemRows}
+          </div>
+        `;
+      }
+      if (!roomSections) roomSections = '<p>No rooms added yet.</p>';
+
+      let receiptSection = '';
+      if (receiptCards.length) {
+        let receiptRows = '';
+        for (const card of receiptCards) {
+          const type = card.querySelector('.receipt-type').value.trim();
+          const date = card.querySelector('.receipt-date').value.trim();
+          const provider = card.querySelector('.receipt-provider').value.trim();
+          const notes = card.querySelector('.receipt-notes').value.trim();
+          const images = await filesToDataUrlsMixed(card.querySelector('.receipt-upload')._files || [], card.querySelector('.receipt-upload')._cloudFiles || []);
+          const photoLabel = card.querySelector('.photo-label-input')?.value.trim() || '';
+          receiptRows += `
+            <div class="report-item-card">
+              <div class="report-item-title">${escapeHtml(type) || 'Receipt / Service Record'}</div>
+              <div class="report-subgrid">
+                <div class="report-field"><div class="k">Date</div><div>${escapeHtml(date) || '-'}</div></div>
+                <div class="report-field"><div class="k">Provider</div><div>${escapeHtml(provider) || '-'}</div></div>
+                <div class="report-field"><div class="k">Photo Label / Exhibit</div><div>${escapeHtml(photoLabel) || '-'}</div></div>
+              </div>
+              <div class="report-field" style="margin-top:10px;"><div class="k">Notes</div><div>${formatMulti(notes)}</div></div>
+              <div class="media-section"><div class="media-title">Attachments</div>${renderAttachmentsBlock(images, photoLabel)}</div>
+            </div>
+          `;
+        }
+        receiptSection = `
+          <div class="report-block">
+            <h3>Previous Tenant Cleaning / Service Receipts</h3>
+            ${receiptRows}
+          </div>
+        `;
+      }
+
+      const tenantSig = document.getElementById('tenantSign').toDataURL('image/png');
+      const agentSig = document.getElementById('agentSign').toDataURL('image/png');
+
+      reportArea.innerHTML = `
+        <h2>${escapeHtml(reportType)} Condition Report</h2><div class="report-stamp">${escapeHtml(reportType)} report • Property: ${escapeHtml(address) || "-"} • Date: ${escapeHtml(handoverDate) || "-"} • Time: ${escapeHtml(handoverTime) || "-"} • Generated: ${escapeHtml(getNowStamp())}</div>
+
+        <div class="report-meta">
+          <div class="meta-card"><div class="k">Report Type</div><div>${escapeHtml(reportType)}</div></div>
+          <div class="meta-card"><div class="k">Property Address</div><div>${escapeHtml(address) || '-'}</div></div>
+          <div class="meta-card"><div class="k">Date</div><div>${escapeHtml(handoverDate) || '-'}</div></div>
+          <div class="meta-card"><div class="k">Time</div><div>${escapeHtml(handoverTime) || '-'}</div></div>
+          <div class="meta-card"><div class="k">Landlord / Agent</div><div>${escapeHtml(inspector) || '-'}</div></div>
+          <div class="meta-card"><div class="k">Tenant</div><div>${escapeHtml(occupant) || '-'}</div></div>
+          <div class="meta-card"><div class="k">General Notes</div><div>${formatMulti(generalNotes)}</div></div>
+          <div class="meta-card"><div class="k">General Voice Notes</div><div>${formatMulti(generalVoiceNotes)}</div></div>
+        </div>
+
+        <div class="report-block">
+          <h3>Handover Items</h3>
+          ${handoverRows || '<div class="mini">No handover items recorded.</div>'}
+        </div>
+
+        ${roomSections}
+        ${receiptSection}
+
+        <div class="report-block">
+          <h3>Acknowledgement</h3>
+          <div class="report-item-card">
+            <div class="report-field"><div class="k">Acknowledgement Text</div><div>${formatMulti(ackText)}</div></div>
+            <div class="report-field" style="margin-top:10px;"><div class="k">Both Parties Acknowledged</div><div>${escapeHtml(acknowledged)}</div></div>
+          </div>
+        </div>
+
+        <div class="report-block">
+          <h3>Report Summary</h3>
+          <div class="summary-box">
+            <div class="summary-stats">
+              <div class="summary-stat"><div class="k">Rooms Inspected</div><div class="v">${roomCards.length}</div></div>
+              <div class="summary-stat"><div class="k">Issues Noted</div><div class="v">${totalIssues}</div></div>
+              <div class="summary-stat"><div class="k">Photos</div><div class="v">${totalPhotos}</div></div>
+              <div class="summary-stat"><div class="k">Videos</div><div class="v">${totalVideos}</div></div>
+              <div class="summary-stat"><div class="k">Receipts</div><div class="v">${totalReceipts}</div></div>
+              <div class="summary-stat"><div class="k">Handover Items</div><div class="v">${handoverCards.length}</div></div>
+            </div>
+            <div style="margin-top:12px;"><b>Key Findings</b></div>
+            ${summarizeFindings(findings)}
+            <div style="margin-top:12px;"><b>Handover Items</b></div>
+            ${handoverSummary.length ? `<ul class="summary-list">${handoverSummary.map(h => `<li>${escapeHtml(h)}</li>`).join('')}</ul>` : `<div class="mini">No handover items recorded.</div>`}
+            <div style="margin-top:12px;"><b>Recorded Summary</b></div>
+            <div class="report-item-card" style="margin-top:8px;">${formatMulti(summaryNotes)}</div>
+          </div>
+        </div>
+
+        ${reportType === 'Exit' ? `
+        <div class="report-block">
+          <h3>Items Requiring Attention Before Deposit Return</h3>
+          <div class="summary-box">
+            <div class="report-item-card">${formatMulti(exitActionNotes)}</div>
+          </div>
+        </div>
+        ` : ''}
+
+        <div class="report-block">
+          <h3>Signatures</h3>
+          <div class="sig-preview">
+            <div><div><b>Tenant Signature</b></div><img src="${tenantSig}" alt="Tenant Signature"></div>
+            <div><div><b>Landlord / Agent Signature</b></div><img src="${agentSig}" alt="Agent Signature"></div>
+          </div>
+        </div>
+      `;
+      reportArea.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function val(id){ return document.getElementById(id).value.trim(); }
+    function formatMulti(str){ if(!str) return '-'; return escapeHtml(str).replace(/\n/g, '<br>'); }
+    function escapeHtml(str){ return String(str ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;'); }
+
+    function setupCanvas(canvasId){
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      function resizeCanvas(){
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * ratio; canvas.height = rect.height * ratio;
+        ctx.setTransform(ratio,0,0,ratio,0,0); ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.strokeStyle = '#111827';
+      }
+      resizeCanvas();
+      let drawing = false, lastX = 0, lastY = 0;
+      function pointFromEvent(e){
+        const rect = canvas.getBoundingClientRect();
+        if (e.touches && e.touches[0]) return { x:e.touches[0].clientX - rect.left, y:e.touches[0].clientY - rect.top };
+        return { x:e.clientX - rect.left, y:e.clientY - rect.top };
+      }
+      function startDraw(e){ drawing = true; const p = pointFromEvent(e); lastX = p.x; lastY = p.y; }
+      function draw(e){ if(!drawing) return; e.preventDefault(); const p = pointFromEvent(e); ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke(); lastX = p.x; lastY = p.y; }
+      function endDraw(){ drawing = false; }
+      canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mousemove', draw); window.addEventListener('mouseup', endDraw);
+      canvas.addEventListener('touchstart', startDraw, {passive:false}); canvas.addEventListener('touchmove', draw, {passive:false}); window.addEventListener('touchend', endDraw);
+      canvas._clear = function(){ const rect = canvas.getBoundingClientRect(); ctx.clearRect(0,0,rect.width,rect.height); };
+    }
+    function clearCanvas(id){ const canvas = document.getElementById(id); if (canvas && canvas._clear) canvas._clear(); }
+    window.clearCanvas = clearCanvas;
+
+    const now = new Date();
+    document.getElementById('handoverDate').value = now.toISOString().slice(0,10);
+    document.getElementById('handoverTime').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+    setupCanvas('tenantSign');
+    setupCanvas('agentSign');
+    document.getElementById('cloudSignUpBtn').addEventListener('click', cloudSignUp);
+    document.getElementById('cloudSignInBtn').addEventListener('click', cloudSignIn);
+    document.getElementById('cloudSignOutBtn').addEventListener('click', cloudSignOut);
+    document.getElementById('createExitBtn').addEventListener('click', createExitFromLoadedEntry);
+    document.getElementById('cloudSaveBtn').addEventListener('click', cloudSaveReport);
+    document.getElementById('cloudLoadBtn').addEventListener('click', cloudLoadReports);
+    setupGeneralVoice();
+    setupDictation('startSummaryVoiceBtn','stopSummaryVoiceBtn','clearSummaryVoiceBtn','summaryNotes','summaryVoiceStatus');
+    setupDictation('startExitActionVoiceBtn','stopExitActionVoiceBtn','clearExitActionVoiceBtn','exitActionNotes','exitActionVoiceStatus');
+    document.getElementById('reportType').addEventListener('change', updateReportTypeUI);
+    buildHandoverItems();
+    addReceiptCard('Professional cleaning');
+    addReceiptCard('Air-conditioner cleaning');
+    addReceiptCard('Curtain cleaning');
+    updateReportTypeUI();
+    buildRooms();
+  </script>
+</body>
+</html>
